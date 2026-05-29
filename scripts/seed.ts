@@ -385,13 +385,13 @@ async function main() {
   console.log("Generating sample results for demo...");
   let resultsCreated = 0;
 
-  // 5 named OC members for realistic audit trails
+  // 5 OC staff roles for realistic audit trails (using fictional role-based names)
   const ocNames = [
-    "Margaret Tan (OC)",
-    "James Wong (The Stand)",
-    "Priya Sharma (Results)",
-    "David Koh (Announcements)",
-    "Aisha Rahman (Check-in)",
+    "OC Coordinator",
+    "The Stand Lead",
+    "Results Lead",
+    "Announcements Lead",
+    "Check-in Lead",
   ];
 
   // Pick 4 events to mark as complete with results (lighter demo)

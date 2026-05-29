@@ -117,6 +117,26 @@ When contributing:
 - Keep mobile usability in mind (many day-of tasks happen on phones).
 - Update documentation where relevant.
 
+## Current Limitations & Roadmap
+
+This project is functional and has powered real event planning, but it is still early-stage.
+
+### Known Limitations
+- No real user authentication for the `/admin` area. The "Current Operator" is a simple string.
+- SQLite-based (via Turso). Suitable for small-to-medium events.
+- Limited built-in reporting or certificate generation (mentioned in early vision).
+- No bulk operations in result entry or check-in.
+- Basic search/filtering only.
+- Some `any` types remain in dynamic areas (CSV import, result forms).
+
+### Desired Future Improvements
+- Proper OC accounts and role-based permissions
+- PDF certificate generation for participants
+- Enhanced mobile experience for field use
+- Reporting dashboard and statistics
+- Full audit log viewer
+- Optional participant photo support
+
 ## License
 
 MIT © Jesse H. Co

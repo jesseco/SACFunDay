@@ -78,7 +78,7 @@ export default async function EventDaySettings() {
                 placeholder="e.g. Margaret Tan"
               />
               <p className="text-xs text-zinc-500 mt-1">
-                This name will be used as the default "Entered by" when recording results.
+                This name will be used as the default &quot;Entered by&quot; when recording results.
               </p>
             </div>
 

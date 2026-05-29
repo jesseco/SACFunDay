@@ -6,12 +6,12 @@ export default function SACFunDayHome() {
           <div className="h-9 w-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xl">S</div>
           <div>
             <div className="text-2xl font-semibold tracking-tight">SACFunDay</div>
-            <div className="text-sm text-zinc-500 -mt-1">St. Augustine's Chapel</div>
+            <div className="text-sm text-zinc-500 -mt-1">St. Augustine&apos;s Chapel</div>
           </div>
         </div>
 
         <h1 className="text-6xl font-semibold tracking-tighter text-balance mt-8 max-w-3xl">
-          Fun Day management for St. Augustine's Chapel
+          Fun Day management for St. Augustine&apos;s Chapel
         </h1>
         <p className="mt-6 max-w-xl text-xl text-zinc-600">
           Parent sign-up portal • QR check-in at stations • Fast result entry • Beautiful certificates for every child.

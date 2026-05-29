@@ -11,7 +11,7 @@ export default async function PortalLanding() {
           <div className="h-10 w-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-2xl">S</div>
           <div>
             <div className="text-3xl font-semibold tracking-tight">SACFunDay</div>
-            <div className="text-sm text-zinc-500 -mt-1">St. Augustine's Chapel</div>
+            <div className="text-sm text-zinc-500 -mt-1">St. Augustine&apos;s Chapel</div>
           </div>
         </div>
 
@@ -65,7 +65,7 @@ export default async function PortalLanding() {
         )}
 
         <div className="mt-16 text-xs text-zinc-400">
-          For questions, please contact St. Augustine's Chapel.
+          For questions, please contact St. Augustine&apos;s Chapel.
         </div>
       </div>
     </div>
