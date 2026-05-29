@@ -66,17 +66,18 @@ async function main() {
   );
 
   // 2. Guardians (parents) - reduced for lighter demo (~20 total participants)
+  // Using clearly fictional names and phones for public repository safety
   const guardianData = [
-    { name: "Sarah Tan", phone: "+65 9123 4567", email: "sarah.tan@email.com" },
-    { name: "Michael Lim", phone: "+65 9876 5432", email: "mike.lim@email.com" },
-    { name: "Priya Sharma", phone: "+65 8765 4321", email: "priya@email.com" },
-    { name: "David Wong", phone: "+65 9123 9876", email: undefined },
-    { name: "Grace Ng", phone: "+65 8234 5678", email: "grace.ng@email.com" },
-    { name: "Raj Patel", phone: "+65 9345 6789", email: "raj.patel@email.com" },
-    { name: "Aisha Rahman", phone: "+65 9456 7890", email: undefined },
-    { name: "Benjamin Lee", phone: "+65 9567 8901", email: "ben.lee@email.com" },
-    { name: "Catherine Ho", phone: "+65 9678 9012", email: "cathy.ho@email.com" },
-    { name: "Daniel Koh", phone: "+65 9789 0123", email: undefined },
+    { name: "Alex Rivera", phone: "+65 9000 0001", email: "alex.rivera@example.com" },
+    { name: "Jordan Kim", phone: "+65 9000 0002", email: "jordan.kim@example.com" },
+    { name: "Taylor Brooks", phone: "+65 9000 0003", email: "taylor.brooks@example.com" },
+    { name: "Morgan Ellis", phone: "+65 9000 0004", email: undefined },
+    { name: "Casey Quinn", phone: "+65 9000 0005", email: "casey.quinn@example.com" },
+    { name: "Riley Santos", phone: "+65 9000 0006", email: "riley.santos@example.com" },
+    { name: "Jamie Patel", phone: "+65 9000 0007", email: undefined },
+    { name: "Avery Chen", phone: "+65 9000 0008", email: "avery.chen@example.com" },
+    { name: "Reese Morgan", phone: "+65 9000 0009", email: "reese.morgan@example.com" },
+    { name: "Skyler Hayes", phone: "+65 9000 0010", email: undefined },
   ];
 
   const insertedGuardians = [];
@@ -197,16 +198,17 @@ async function main() {
 
   // 4. Participants + Registrations (target 60-80+ kids + adults)
   const firstNames = ["Ethan", "Olivia", "Liam", "Emma", "Noah", "Ava", "Lucas", "Sophia", "Mason", "Isabella", "Jacob", "Mia", "William", "Charlotte", "James", "Amelia", "Benjamin", "Harper", "Elijah", "Evelyn", "Lucas", "Aria", "Henry", "Luna"];
-  const lastNames = ["Tan", "Lim", "Wong", "Lee", "Ng", "Koh", "Ho", "Teo", "Chua", "Ong", "Goh", "Yap", "Sim", "Chan", "Low", "Nguyen", "Singh", "Fernandez"];
+  // Using fictional last names for public repository
+  const lastNames = ["Rivera", "Kim", "Brooks", "Ellis", "Quinn", "Santos", "Patel", "Chen", "Morgan", "Hayes", "Lane", "Reed", "Blake", "Vale", "Ross", "Hayes", "Stone", "Wells"];
 
   let kidCount = 0;
 
-  // Create more guardians for realism
+  // Create more guardians for realism (demo data - using fictional names only)
   const extraGuardians = [
-    { name: "Wei Ling", phone: "+65 8123 9988" },
-    { name: "Marcus Teo", phone: "+65 8224 5566" },
-    { name: "Fatimah Binte Ali", phone: "+65 8335 6677" },
-    { name: "Josephine Chia", phone: "+65 8446 7788" },
+    { name: "Harper Lane", phone: "+65 9000 0011" },
+    { name: "Finley Reed", phone: "+65 9000 0012" },
+    { name: "Phoenix Vale", phone: "+65 9000 0013" },
+    { name: "Rowan Blake", phone: "+65 9000 0014" },
   ];
 
   for (const g of extraGuardians) {
@@ -278,7 +280,8 @@ async function main() {
   console.log(`✓ ${kidCount} children + registrations created`);
 
   // Create 5 regular self-registered adult participants (no guardian)
-  const regularAdultNames = ["Ethan Tan", "Olivia Lim", "Lucas Wong", "Emma Koh", "Noah Teo"];
+  // Using clearly fictional names for public repository safety
+  const regularAdultNames = ["Ethan Vale", "Olivia Reed", "Lucas Blake", "Emma Lane", "Noah Quinn"];
   let regularAdultCount = 0;
 
   const adultAgeGroups = ["University+ (Ages 18-30)", "Ages 30-45", "Ages 45-60"];
@@ -317,13 +320,14 @@ async function main() {
   }
   console.log(`✓ ${regularAdultCount} regular self-adult participants + registrations created`);
 
-  // Create 5 named OC (Organizing Committee) members as adult participants
+  // Create 5 OC (Organizing Committee) staff members as adult participants
+  // Using role-based names (Option A) for public repository clarity
   const ocMembers = [
-    { name: "Margaret Tan (OC)", ageGroup: "Ages 45-60", birthYear: 1972 },
-    { name: "James Wong (The Stand)", ageGroup: "Ages 30-45", birthYear: 1985 },
-    { name: "Priya Sharma (Results)", ageGroup: "University+ (Ages 18-30)", birthYear: 1998 },
-    { name: "David Koh (Announcements)", ageGroup: "Ages 45-60", birthYear: 1970 },
-    { name: "Aisha Rahman (Check-in)", ageGroup: "Ages 30-45", birthYear: 1988 },
+    { name: "OC Coordinator", ageGroup: "Ages 45-60", birthYear: 1972 },
+    { name: "The Stand Lead", ageGroup: "Ages 30-45", birthYear: 1985 },
+    { name: "Results Lead", ageGroup: "University+ (Ages 18-30)", birthYear: 1998 },
+    { name: "Announcements Lead", ageGroup: "Ages 45-60", birthYear: 1970 },
+    { name: "Check-in Lead", ageGroup: "Ages 30-45", birthYear: 1988 },
   ];
 
   let adultCount = 0;
@@ -375,7 +379,7 @@ async function main() {
     adultCount++;
   }
 
-  console.log(`✓ ${adultCount} OC members (adults) + registrations created`);
+  console.log(`✓ ${adultCount} OC staff members + registrations created`);
 
   // 5. Generate sample results (for demo purposes - makes the app feel alive)
   console.log("Generating sample results for demo...");
@@ -474,7 +478,7 @@ async function main() {
   console.log(`   - ${insertedAgeGroups.length} age groups`);
   console.log(`   - ${insertedEvents.length} events`);
   console.log(`   - ${insertedGuardians.length} guardians`);
-  console.log(`   - ${kidCount} children + 5 regular adults + ${adultCount} OC members (25 participants total)`);
+  console.log(`   - ${kidCount} children + 5 regular adults + ${adultCount} OC staff (25 participants total, using fictional demo data)`);
   console.log(`   - ${resultsCreated} sample results across ${eventsToComplete.length} completed events (entered by OC)`);
 }
 
