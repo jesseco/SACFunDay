@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/your-username/sacfunday.git"
   },
-  "author": "St. Augustine's Chapel",
+  "author": "Jesse H. Co",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

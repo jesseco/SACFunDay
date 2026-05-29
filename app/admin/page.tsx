@@ -169,7 +169,7 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="text-xs text-zinc-400">
-        SACFunDay • St. Augustine's Chapel • Last updated just now
+        SACFunDay • by Jesse H. Co • Last updated just now
       </div>
     </div>
   );

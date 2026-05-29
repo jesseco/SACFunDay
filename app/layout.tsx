@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SACFunDay | St. Augustine's Chapel Fun Day",
-  description: "Fun Day management system for St. Augustine's Chapel — parent sign-up, QR check-in, results & certificates.",
+  title: "SACFunDay | Fun Day Management System",
+  description: "A practical Fun Day / Sports Day management system with parent portal, Master QR codes, and day-of tools. Built by Jesse H. Co.",
   icons: {
     icon: "/favicon.ico",
   },

@@ -95,8 +95,8 @@ When contributing:
 
 ## License
 
-MIT © St. Augustine's Chapel
+MIT © Jesse H. Co
 
 ---
 
-> This project was built to solve real operational needs for a church Fun Day, with a strong focus on low-friction parent experience and reliable day-of tools for the organizing committee.
+> This project was originally built for St. Augustine's Chapel's annual Fun Day. It is maintained by Jesse H. Co.

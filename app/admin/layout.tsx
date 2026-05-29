@@ -15,7 +15,7 @@ export default function AdminLayout({
             <div className="h-8 w-8 rounded bg-emerald-600 flex items-center justify-center text-white font-bold">S</div>
             <div>
               <div className="font-semibold tracking-tight">SACFunDay</div>
-              <div className="text-[10px] text-emerald-600 -mt-0.5">St. Augustine's Chapel</div>
+              <div className="text-[10px] text-emerald-600 -mt-0.5">Jesse H. Co</div>
             </div>
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function AdminLayout({
         </nav>
 
         <div className="mt-auto pt-6 text-xs text-zinc-400">
-          SACFunDay • St. Augustine's Chapel<br />
+          SACFunDay • by Jesse H. Co<br />
           Fun Day 2026
         </div>
       </aside>
