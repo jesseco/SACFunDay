@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SACFunDay
+
+> A practical, production-oriented system for managing a church Fun Day / Sports Day.
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Turso](https://img.shields.io/badge/Database-Turso-orange?style=flat)](https://turso.tech)
+
+**St. Augustine's Chapel Fun Day Management System**
+
+A complete, real-world application for running an annual church Fun Day, designed with both parent experience and on-the-day operational needs in mind.
+
+### Features
+
+- Parent & Adult sign-up portal (2–3 week window)
+- Master QR code per participant (one memorable code for all events)
+- Station check-in with camera QR scanning
+- Fast, touch-friendly result entry with paper + digital workflow support
+- Admin tools for the Organizing Committee ("The Stand")
+- Age-group based events (including dedicated adult categories)
+
+Built for St. Augustine's Chapel.
+
+## Tech Stack
+
+- Next.js 15 (App Router)
+- TypeScript + Tailwind + shadcn/ui
+- Drizzle ORM + Turso (LibSQL) or local SQLite
+- QR code generation and scanning
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Local Development (SQLite)
 
 ```bash
+# Clone the repo
+git clone https://github.com/your-username/sacfunday.git
+cd sacfunday
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Development**: Uses local `sacfundday.db` (SQLite) by default.
+- **Production**: Recommended to use [Turso](https://turso.tech) (hosted LibSQL).
 
-## Learn More
+To use Turso, set these environment variables:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+DATABASE_URL=libsql://your-db.turso.io
+DATABASE_AUTH_TOKEN=your-auth-token
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run db:push      # Push schema changes to database
+npm run db:seed      # Seed the database with demo data
+npm run db:studio    # Open Drizzle Studio
+```
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/app/portal` — Public sign-up and QR retrieval
+- `/app/admin` — Organizing Committee tools (events, participants, result entry, check-in, settings)
+- `/scripts/seed.ts` — Database seeding script
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for instructions on deploying with Vercel + Turso.
+
+## Contributing
+
+Contributions are welcome. Please open an issue first to discuss any major changes.
+
+When contributing:
+
+1. Follow the existing code style and component patterns.
+2. Update documentation where relevant.
+3. Ensure the application remains usable on both desktop and mobile (important for field use).
+
+## License
+
+MIT © St. Augustine's Chapel
+
+---
+
+> This project was built to solve real operational needs for a church Fun Day, with a strong focus on low-friction parent experience and reliable day-of tools for the organizing committee.
