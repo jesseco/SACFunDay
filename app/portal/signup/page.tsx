@@ -89,7 +89,7 @@ export default function ParentSignup() {
       participants.map(p => {
         if (p.id !== id) return p;
         
-        let updated = { ...p, [field]: value };
+        const updated = { ...p, [field]: value };
 
         // If changing age group, reset selected events
         if (field === 'ageGroupId') {

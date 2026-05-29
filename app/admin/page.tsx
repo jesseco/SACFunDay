@@ -48,9 +48,9 @@ export default async function AdminDashboard() {
         <div>
           <h1 className="text-4xl font-semibold tracking-tight">{eventTitle}</h1>
           <p className="text-zinc-600 mt-1 text-lg">{eventDate}</p>
-          {currentSettings?.notes?.includes('OPERATOR:') && (
+          { (currentSettings as any)?.notes?.includes('OPERATOR:') && (
             <p className="text-sm text-emerald-700 mt-0.5">
-              On duty: <strong>{currentSettings.notes.match(/OPERATOR:\s*(.+)/)?.[1]?.trim()}</strong>
+              On duty: <strong>{(currentSettings as any).notes.match(/OPERATOR:\s*(.+)/)?.[1]?.trim()}</strong>
             </p>
           )}
         </div>

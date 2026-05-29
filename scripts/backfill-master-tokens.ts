@@ -13,11 +13,12 @@ async function main() {
       ADD COLUMN master_checkin_token TEXT
     `);
     console.log('✓ Added master_checkin_token column');
-  } catch (e: any) {
-    if (e.message?.includes('duplicate column name')) {
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    if (message.includes('duplicate column name')) {
       console.log('✓ Column already exists');
     } else {
-      console.error('Error adding column:', e.message);
+      console.error('Error adding column:', message);
     }
   }
 

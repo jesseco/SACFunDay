@@ -13,7 +13,7 @@ export default function StationCheckIn() {
   const eventId = parseInt(params.eventId);
 
   const [masterToken, setMasterToken] = useState('');
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [isScanning, setIsScanning] = useState(false);
@@ -67,12 +67,11 @@ export default function StationCheckIn() {
           setMasterToken(decodedText);
           handleCheckIn(decodedText);
         },
-        (errorMessage) => {
+        () => {
           // Ignore frequent "no QR found" errors
         }
       );
-    } catch (err) {
-      console.error(err);
+    } catch {
       setMessage('Could not start camera. Please check permissions or use manual entry.');
       setIsScanning(false);
     }

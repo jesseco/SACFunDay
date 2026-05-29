@@ -6,37 +6,39 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function ResultsList() {
-  const eventList = await db
-    .select({
-      id: events.id,
-      name: events.name,
-      type: events.type,
-      ageGroup: ageGroups.name,
-      isComplete: events.isComplete,
-      scheduledTime: events.scheduledTime,
-    })
+  const eventListRaw = await db
+    .select()
     .from(events)
     .leftJoin(ageGroups, eq(events.ageGroupId, ageGroups.id))
     .orderBy(events.scheduledTime);
 
+  const eventList = eventListRaw.map((row) => ({
+    id: row.events.id,
+    name: row.events.name,
+    type: row.events.type,
+    ageGroup: row.age_groups?.name ?? null,
+    isComplete: row.events.isComplete,
+    scheduledTime: row.events.scheduledTime,
+  }));
+
   // Get registration counts and result counts for each event
   const eventsWithStats = await Promise.all(
     eventList.map(async (event) => {
-      const [regCount] = await db
-        .select({ count: count() })
+      const regCountRows = await db
+        .select()
         .from(registrations)
         .where(eq(registrations.eventId, event.id));
 
-      const [resultCount] = await db
-        .select({ count: count() })
+      const resultCountRows = await db
+        .select()
         .from(results)
         .leftJoin(registrations, eq(results.registrationId, registrations.id))
         .where(eq(registrations.eventId, event.id));
 
       return {
         ...event,
-        registeredCount: regCount?.count ?? 0,
-        resultsEntered: resultCount?.count ?? 0,
+        registeredCount: (regCountRows as any).length ?? 0,
+        resultsEntered: (resultCountRows as any).length ?? 0,
       };
     })
   );

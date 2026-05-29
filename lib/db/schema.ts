@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 
 // Age groups / Sunday school classes (reusable)
@@ -85,6 +85,7 @@ export const settings = sqliteTable("settings", {
   portalOpen: integer("portal_open", { mode: "boolean" }).notNull().default(false),
   portalOpensAt: integer("portal_opens_at", { mode: "timestamp" }),
   portalClosesAt: integer("portal_closes_at", { mode: "timestamp" }),
+  notes: text("notes"),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 });
 

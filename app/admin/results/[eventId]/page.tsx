@@ -15,49 +15,57 @@ export default async function ResultEntryPage({ params }: Props) {
   if (isNaN(eventId)) notFound();
 
   // Get event details
-  const event = await db
-    .select({
-      id: events.id,
-      name: events.name,
-      type: events.type,
-      unit: events.unit,
-      ageGroup: ageGroups.name,
-      isComplete: events.isComplete,
-    })
+  const eventRaw = await db
+    .select()
     .from(events)
     .leftJoin(ageGroups, eq(events.ageGroupId, ageGroups.id))
     .where(eq(events.id, eventId))
     .get();
 
+  const event = eventRaw
+    ? {
+        id: eventRaw.events.id,
+        name: eventRaw.events.name,
+        type: eventRaw.events.type,
+        unit: eventRaw.events.unit,
+        ageGroup: eventRaw.age_groups?.name ?? null,
+        isComplete: eventRaw.events.isComplete,
+      }
+    : null;
+
   if (!event) notFound();
 
   // Get all registrations for this event with participant info
-  const registeredParticipants = await db
-    .select({
-      registrationId: registrations.id,
-      participantId: participants.id,
-      name: participants.name,
-      bibNumber: participants.bibNumber,
-    })
+  const registeredParticipantsRaw = await db
+    .select()
     .from(registrations)
     .innerJoin(participants, eq(registrations.participantId, participants.id))
     .where(eq(registrations.eventId, eventId))
     .orderBy(participants.name);
 
+  const registeredParticipants = registeredParticipantsRaw.map((row) => ({
+    registrationId: row.registrations.id,
+    participantId: row.participants.id,
+    name: row.participants.name,
+    bibNumber: row.participants.bibNumber,
+  }));
+
   // Get existing results
-  const existingResults = await db
-    .select({
-      registrationId: results.registrationId,
-      performanceValue: results.performanceValue,
-      place: results.place,
-      status: results.status,
-      source: results.source,
-      enteredAt: results.enteredAt,
-      enteredBy: results.enteredBy,
-    })
+  const existingResultsRaw = await db
+    .select()
     .from(results)
     .innerJoin(registrations, eq(results.registrationId, registrations.id))
     .where(eq(registrations.eventId, eventId));
+
+  const existingResults = existingResultsRaw.map((row) => ({
+    registrationId: row.results.registrationId,
+    performanceValue: row.results.performanceValue,
+    place: row.results.place,
+    status: row.results.status,
+    source: row.results.source,
+    enteredAt: row.results.enteredAt,
+    enteredBy: row.results.enteredBy,
+  }));
 
   const resultsMap = new Map(
     existingResults.map(r => [r.registrationId, r])
@@ -66,8 +74,9 @@ export default async function ResultEntryPage({ params }: Props) {
   // Get current operator from settings (stored as "OPERATOR: Name" in notes)
   const currentSettings = await db.select().from(settings).limit(1).get();
   let defaultOperator = '';
-  if (currentSettings?.notes) {
-    const match = currentSettings.notes.match(/OPERATOR:\s*(.+)/);
+  const settingsWithNotes = currentSettings as any;
+  if (settingsWithNotes?.notes) {
+    const match = settingsWithNotes.notes.match(/OPERATOR:\s*(.+)/);
     if (match) defaultOperator = match[1].trim();
   }
 

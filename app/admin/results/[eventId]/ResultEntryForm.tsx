@@ -48,7 +48,7 @@ export default function ResultEntryForm({
   totalRegistered,
   defaultOperator = '',
 }: ResultEntryFormProps) {
-  const [results, setResults] = useState<Record<number, any>>(() => {
+  const [results, setResults] = useState<Record<number, Record<string, any>>>(() => {
     const initial: Record<number, any> = {};
     participants.forEach((p) => {
       const existing = existingResults.get(p.registrationId);
@@ -75,7 +75,7 @@ export default function ResultEntryForm({
 
   const [saving, setSaving] = useState<Record<number, boolean>>({});
   const [isComplete, setIsComplete] = useState(initialComplete);
-  const [previousStates, setPreviousStates] = useState<Record<number, any>>({});
+  const [previousStates, setPreviousStates] = useState<Record<number, Record<string, any>>>({});
 
   // Global "Entered by" for this session (persisted in localStorage for convenience)
   const [enteredByName, setEnteredByName] = useState(() => {
@@ -91,7 +91,7 @@ export default function ResultEntryForm({
     r.place !== null || r.status !== 'ok' || r.performanceValue
   ).length;
 
-  const updateWithAudit = (regId: number, updates: any) => {
+  const updateWithAudit = (regId: number, updates: Record<string, any>) => {
     const now = new Date();
     const enteredBy = enteredByName.trim() || 'OC';
     setResults((prev) => ({
@@ -105,7 +105,7 @@ export default function ResultEntryForm({
     }));
   };
 
-  const updateResult = (regId: number, field: string, value: any) => {
+  const updateResult = (regId: number, field: string, value: unknown) => {
     setResults((prev) => ({
       ...prev,
       [regId]: {
@@ -115,9 +115,9 @@ export default function ResultEntryForm({
     }));
   };
 
-  const setSource = (regId: number, source: string) => {
-    updateResult(regId, 'source', source);
-  };
+  // const setSource = (regId: number, source: string) => {
+  //   updateResult(regId, 'source', source);
+  // };
 
   const snapshotPrevious = (regId: number) => {
     setPreviousStates(prev => ({

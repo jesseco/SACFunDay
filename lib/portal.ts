@@ -1,6 +1,5 @@
 import { db } from './db/client';
 import { settings } from './db/schema';
-import { eq } from 'drizzle-orm';
 
 export async function getPortalStatus() {
   const setting = await db.select().from(settings).limit(1).get();

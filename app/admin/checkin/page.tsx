@@ -6,17 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function CheckInIndex() {
-  const eventList = await db
-    .select({
-      id: events.id,
-      name: events.name,
-      ageGroup: ageGroups.name,
-      scheduledTime: events.scheduledTime,
-      isComplete: events.isComplete,
-    })
+  const eventListRaw = await db
+    .select()
     .from(events)
     .leftJoin(ageGroups, eq(events.ageGroupId, ageGroups.id))
     .orderBy(events.scheduledTime);
+
+  const eventList = eventListRaw.map((row) => ({
+    id: row.events.id,
+    name: row.events.name,
+    ageGroup: row.age_groups?.name ?? null,
+    scheduledTime: row.events.scheduledTime,
+    isComplete: row.events.isComplete,
+  }));
 
   return (
     <div className="max-w-4xl">

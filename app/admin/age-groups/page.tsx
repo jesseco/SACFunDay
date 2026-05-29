@@ -4,11 +4,7 @@ import AgeGroupsClient from './AgeGroupsClient';
 
 export default async function AgeGroupsPage() {
   const groups = await db
-    .select({
-      id: ageGroups.id,
-      name: ageGroups.name,
-      sortOrder: ageGroups.sortOrder,
-    })
+    .select()
     .from(ageGroups)
     .orderBy(ageGroups.sortOrder);
 

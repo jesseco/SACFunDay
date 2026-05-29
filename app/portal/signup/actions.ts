@@ -83,13 +83,13 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
     }
 
     // Fetch the actual event names for this participant (for nice display on success screen)
-    const eventRows = await db
-      .select({ name: events.name })
+    const eventRowsRaw = await db
+      .select()
       .from(registrations)
       .innerJoin(events, eq(registrations.eventId, events.id))
       .where(eq(registrations.participantId, participant.id));
 
-    const eventNames = eventRows.map(e => e.name);
+    const eventNames = eventRowsRaw.map(row => row.events.name);
 
     // Generate the Master QR code immediately (data URL)
     const qrDataUrl = await QRCode.toDataURL(masterToken, { width: 280, margin: 1 });

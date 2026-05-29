@@ -5,7 +5,7 @@ import { results, events } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
-export async function saveResult(eventId: number, registrationId: number, data: any) {
+export async function saveResult(eventId: number, registrationId: number, data: Record<string, unknown>) {
   const existing = await db
     .select()
     .from(results)
@@ -13,12 +13,12 @@ export async function saveResult(eventId: number, registrationId: number, data: 
     .get();
 
   const payload = {
-    performanceValue: data.performanceValue || null,
-    place: data.place ?? null,
-    status: data.status || 'ok',
-    source: data.source || 'app',
+    performanceValue: (data.performanceValue as string) || null,
+    place: (data.place as number) ?? null,
+    status: (data.status as string) || 'ok',
+    source: (data.source as string) || 'app',
     enteredAt: new Date(),
-    enteredBy: data.enteredBy?.trim() || 'OC',  // Now comes from the form input (much better than hardcoded)
+    enteredBy: (typeof data.enteredBy === 'string' ? data.enteredBy.trim() : null) || 'OC',
   };
 
   if (existing) {

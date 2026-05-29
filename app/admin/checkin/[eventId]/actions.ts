@@ -2,15 +2,12 @@
 
 import { db } from '@/lib/db/client';
 import { participants, registrations, events } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 export async function checkInWithMasterToken(eventId: number, masterToken: string) {
   // Find participant by master token
   const participant = await db
-    .select({
-      id: participants.id,
-      name: participants.name,
-    })
+    .select()
     .from(participants)
     .where(eq(participants.masterCheckinToken, masterToken))
     .get();
@@ -20,16 +17,19 @@ export async function checkInWithMasterToken(eventId: number, masterToken: strin
   }
 
   // Get all registrations for this participant
-  const allRegistrations = await db
-    .select({
-      registrationId: registrations.id,
-      eventId: registrations.eventId,
-      eventName: events.name,
-      checkedInAt: registrations.checkedInAt,
-    })
+  const allRegistrationsRaw = await db
+    .select()
     .from(registrations)
     .innerJoin(events, eq(registrations.eventId, events.id))
     .where(eq(registrations.participantId, participant.id));
+
+  // Map the joined result to a flatter shape for easier use
+  const allRegistrations = allRegistrationsRaw.map((row) => ({
+    registrationId: row.registrations.id,
+    eventId: row.registrations.eventId,
+    eventName: row.events.name,
+    checkedInAt: row.registrations.checkedInAt,
+  }));
 
   const eventNames = allRegistrations.map(r => r.eventName);
 

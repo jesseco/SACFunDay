@@ -4,26 +4,28 @@ import { eq } from 'drizzle-orm';
 import ParticipantsClient from './ParticipantsClient';
 
 export default async function ParticipantsPage() {
-  const [kids, ageGroupList] = await Promise.all([
+  const [kidsRaw, ageGroupList] = await Promise.all([
     db
-      .select({
-        id: participants.id,
-        name: participants.name,
-        bib: participants.bibNumber,
-        ageGroup: ageGroups.name,
-        ageGroupId: participants.ageGroupId,
-        guardian: guardians.name,
-        guardianPhone: guardians.phone,
-        guardianEmail: guardians.email,
-        notes: participants.notes,
-      })
+      .select()
       .from(participants)
       .leftJoin(guardians, eq(participants.guardianId, guardians.id))
       .leftJoin(ageGroups, eq(participants.ageGroupId, ageGroups.id))
       .orderBy(participants.name),
 
-    db.select({ id: ageGroups.id, name: ageGroups.name }).from(ageGroups).orderBy(ageGroups.sortOrder),
+    db.select().from(ageGroups).orderBy(ageGroups.sortOrder),
   ]);
+
+  const kids = kidsRaw.map((row) => ({
+    id: row.participants.id,
+    name: row.participants.name,
+    bib: row.participants.bibNumber,
+    ageGroup: row.age_groups?.name ?? null,
+    ageGroupId: row.participants.ageGroupId,
+    guardian: row.guardians?.name ?? 'Self-registered',
+    guardianPhone: row.guardians?.phone ?? '',
+    guardianEmail: row.guardians?.email ?? null,
+    notes: row.participants.notes,
+  }));
 
   return <ParticipantsClient participants={kids} ageGroups={ageGroupList} />;
 }

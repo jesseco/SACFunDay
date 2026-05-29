@@ -52,8 +52,8 @@ export default function ParticipantsClient({ participants: initialParticipants, 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [importStatus, setImportStatus] = useState<{ created: number; skipped: number } | null>(null);
 
-  const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [parsedRows, setParsedRows] = useState<any[]>([]);
+  const [, setCsvFile] = useState<File | null>(null);
+  const [parsedRows, setParsedRows] = useState<Record<string, unknown>[]>([]);
 
   const handleDelete = async (id: number, name: string) => {
     if (!confirm(`Delete participant "${name}" and all their registrations?`)) return;
@@ -86,7 +86,7 @@ export default function ParticipantsClient({ participants: initialParticipants, 
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
-        setParsedRows(results.data as any[]);
+        setParsedRows(results.data as Record<string, unknown>[]);
       },
       error: (err) => {
         alert('Failed to parse CSV: ' + err.message);
@@ -140,7 +140,7 @@ export default function ParticipantsClient({ participants: initialParticipants, 
     <div className="max-w-6xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-semibold tracking-tight">Participants ({participants.length})</h1>
-        <p className="text-xs text-zinc-500 -mt-1">Staff members are highlighted with an amber background and "Staff" badge.</p>
+        <p className="text-xs text-zinc-500 -mt-1">Staff members are highlighted with an amber background and &quot;Staff&quot; badge.</p>
         <div className="flex gap-2">
           <Button variant="outline" onClick={exportCSV}>
             Export CSV
@@ -308,7 +308,7 @@ export default function ParticipantsClient({ participants: initialParticipants, 
       </Dialog>
 
       <p className="mt-6 text-xs text-zinc-400">
-        Tip: Use "Export CSV" to get a template, then re-import after editing in Excel/Google Sheets.
+        Tip: Use &quot;Export CSV&quot; to get a template, then re-import after editing in Excel/Google Sheets.
       </p>
     </div>
   );

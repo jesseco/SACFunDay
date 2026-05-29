@@ -75,7 +75,7 @@ export async function deleteParticipant(id: number) {
 }
 
 // Bulk import from CSV data
-export async function importParticipantsCSV(rows: any[]) {
+export async function importParticipantsCSV(rows: Record<string, unknown>[]) {
   let created = 0;
   let skipped = 0;
 
@@ -93,10 +93,11 @@ export async function importParticipantsCSV(rows: any[]) {
     }
 
     // Find age group
+    const ageGroupNameStr = String(ageGroupName).trim();
     const ageGroup = await db
       .select()
       .from(ageGroups)
-      .where(eq(ageGroups.name, ageGroupName.trim()))
+      .where(eq(ageGroups.name, ageGroupNameStr))
       .get();
 
     if (!ageGroup) {
@@ -105,19 +106,20 @@ export async function importParticipantsCSV(rows: any[]) {
     }
 
     // Find or create guardian
+    const parentPhoneStr = String(parentPhone).trim();
     let guardian = await db
       .select()
       .from(guardians)
-      .where(eq(guardians.phone, parentPhone.trim()))
+      .where(eq(guardians.phone, parentPhoneStr))
       .get();
 
     if (!guardian) {
       guardian = await db
         .insert(guardians)
         .values({
-          name: parentName.trim(),
-          phone: parentPhone.trim(),
-          email: parentEmail,
+          name: String(parentName).trim(),
+          phone: parentPhoneStr,
+          email: parentEmail ? String(parentEmail) : null,
         })
         .returning()
         .get();
@@ -127,10 +129,10 @@ export async function importParticipantsCSV(rows: any[]) {
     const participant = await db
       .insert(participants)
       .values({
-        name: childName.trim(),
-        guardianId: guardian.id,
-        ageGroupId: ageGroup.id,
-        bibNumber: bib,
+        name: String(childName).trim(),
+        guardianId: (guardian as any)?.id ?? null,
+        ageGroupId: (ageGroup as any)?.id ?? 0,
+        bibNumber: bib ? String(bib) : null,
       })
       .returning()
       .get();

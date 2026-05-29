@@ -38,14 +38,8 @@ export async function retrieveRegistrations(input: RetrieveInput): Promise<Retri
       .get();
 
     if (guardian) {
-      participantRows = await db
-        .select({
-          id: participants.id,
-          name: participants.name,
-          birthYear: participants.birthYear,
-          guardianId: participants.guardianId,
-          masterCheckinToken: participants.masterCheckinToken,
-        })
+      const rows = await db
+        .select()
         .from(participants)
         .where(
           and(
@@ -53,19 +47,20 @@ export async function retrieveRegistrations(input: RetrieveInput): Promise<Retri
             like(participants.name, nameQuery)
           )
         );
+      participantRows = rows.map(r => ({
+        id: r.id,
+        name: r.name,
+        birthYear: r.birthYear,
+        guardianId: r.guardianId,
+        masterCheckinToken: r.masterCheckinToken,
+      }));
     }
   }
 
   // Strategy 2: Name + Birth Year (works for both children and self-registered adults)
   if (participantRows.length === 0 && birthYear) {
-    participantRows = await db
-      .select({
-        id: participants.id,
-        name: participants.name,
-        birthYear: participants.birthYear,
-        guardianId: participants.guardianId,
-        masterCheckinToken: participants.masterCheckinToken,
-      })
+    const rows = await db
+      .select()
       .from(participants)
       .where(
         and(
@@ -73,21 +68,29 @@ export async function retrieveRegistrations(input: RetrieveInput): Promise<Retri
           eq(participants.birthYear, birthYear)
         )
       );
+    participantRows = rows.map(r => ({
+      id: r.id,
+      name: r.name,
+      birthYear: r.birthYear,
+      guardianId: r.guardianId,
+      masterCheckinToken: r.masterCheckinToken,
+    }));
   }
 
   // Strategy 3: Name only (fuzzy, last resort)
   if (participantRows.length === 0) {
-    participantRows = await db
-      .select({
-        id: participants.id,
-        name: participants.name,
-        birthYear: participants.birthYear,
-        guardianId: participants.guardianId,
-        masterCheckinToken: participants.masterCheckinToken,
-      })
+    const rows = await db
+      .select()
       .from(participants)
       .where(like(participants.name, nameQuery))
-      .limit(5); // safety limit
+      .limit(5);
+    participantRows = rows.map(r => ({
+      id: r.id,
+      name: r.name,
+      birthYear: r.birthYear,
+      guardianId: r.guardianId,
+      masterCheckinToken: r.masterCheckinToken,
+    })); // safety limit
   }
 
   if (participantRows.length === 0) {
@@ -98,14 +101,16 @@ export async function retrieveRegistrations(input: RetrieveInput): Promise<Retri
 
   for (const participant of participantRows) {
     // Get all registrations for this participant
-    const participantRegistrations = await db
-      .select({
-        eventName: events.name,
-        checkinToken: registrations.checkinToken,
-      })
+    const participantRegistrationsRaw = await db
+      .select()
       .from(registrations)
       .innerJoin(events, eq(registrations.eventId, events.id))
       .where(eq(registrations.participantId, participant.id));
+
+    const participantRegistrations = participantRegistrationsRaw.map(row => ({
+      eventName: row.events.name,
+      checkinToken: row.registrations.checkinToken,
+    }));
 
     if (participantRegistrations.length === 0) continue;
 
