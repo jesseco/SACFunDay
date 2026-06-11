@@ -10,6 +10,8 @@
 
 Originally created for **St. Augustine's Chapel**.
 
+> **New here (non-technical)?** Read [BASICS.md](BASICS.md) — bullet-point explanations of the main functions from the parents’ perspective and the Organizing Committee’s (OC) perspective.
+
 ## Features
 
 - **Parent & Adult Sign-up Portal** — 2–3 week open registration window

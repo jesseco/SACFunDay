@@ -43,3 +43,6 @@ sacfundday.db
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Contains live secrets - never commit
+Turso.txt

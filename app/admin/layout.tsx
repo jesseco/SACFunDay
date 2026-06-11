@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Users, Calendar, ClipboardList, Trophy, Settings, Home } from "lucide-react";
+import { Users, Calendar, ClipboardList, Trophy, Settings, Home, LogOut } from "lucide-react";
+import { LogoutButton } from "./logout-button";
 
 export default function AdminLayout({
   children,
@@ -44,9 +45,12 @@ export default function AdminLayout({
           </Link>
         </nav>
 
-        <div className="mt-auto pt-6 text-xs text-zinc-400">
-          SACFunDay • by Jesse H. Co<br />
-          Fun Day 2026
+        <div className="mt-auto pt-6 space-y-3">
+          <LogoutButton />
+          <div className="text-xs text-zinc-400">
+            SACFunDay • by Jesse H. Co<br />
+            Fun Day 2026
+          </div>
         </div>
       </aside>
 
