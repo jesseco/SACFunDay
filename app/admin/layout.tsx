@@ -1,12 +1,20 @@
 import Link from "next/link";
-import { Users, Calendar, ClipboardList, Trophy, Settings, Home, LogOut } from "lucide-react";
+import { redirect } from "next/navigation";
+import { Users, Calendar, ClipboardList, Trophy, Settings, Home } from "lucide-react";
 import { LogoutButton } from "./logout-button";
+import { isAuthenticated } from "@/lib/auth";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Defense-in-depth: re-check the session server-side, in addition to
+  // the request guard in proxy.ts.
+  if (!(await isAuthenticated())) {
+    redirect("/login?from=/admin");
+  }
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}

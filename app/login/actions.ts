@@ -1,8 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-
-const COOKIE_NAME = "sac-admin-session";
+import { SESSION_COOKIE, SESSION_VALUE } from "@/lib/auth";
 
 export async function verifyPin(formData: FormData): Promise<{ error?: string }> {
   const pin = formData.get("pin") as string;
@@ -22,7 +21,7 @@ export async function verifyPin(formData: FormData): Promise<{ error?: string }>
 
   // Set session cookie (expires in 24 hours)
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, "authenticated", {
+  cookieStore.set(SESSION_COOKIE, SESSION_VALUE, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -35,5 +34,5 @@ export async function verifyPin(formData: FormData): Promise<{ error?: string }>
 
 export async function logout() {
   const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete(SESSION_COOKIE);
 }

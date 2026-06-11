@@ -2,7 +2,7 @@
 
 > A practical, production-oriented system for managing a church Fun Day / Sports Day.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![Turso](https://img.shields.io/badge/Database-Turso-orange?style=flat)](https://turso.tech)
 
@@ -23,7 +23,7 @@ Originally created for **St. Augustine's Chapel**.
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui
+- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS, shadcn/ui
 - **Database**: Drizzle ORM + Turso (LibSQL) for production, local SQLite for development
 - **Other**: QR code generation (`qrcode`), camera scanning (`html5-qrcode`)
 
