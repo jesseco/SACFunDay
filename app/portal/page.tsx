@@ -43,7 +43,7 @@ export default async function PortalLanding() {
               href="/portal/signup"
               className="inline-flex h-14 items-center justify-center rounded-full bg-emerald-600 px-10 text-lg font-medium text-white hover:bg-emerald-700 transition-colors w-full sm:w-auto"
             >
-              Sign up my child(ren)
+              Register participants
             </Link>
 
             <div>

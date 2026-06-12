@@ -6,8 +6,32 @@ import { eq } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import QRCode from 'qrcode';
+import { z } from 'zod';
 
 const MAX_EVENTS_PER_PERSON = 4;
+
+const participantSchema = z.object({
+  type: z.enum(['adult', 'child']),
+  name: z.string().trim().min(1, 'Participant name is required').max(120),
+  ageGroupId: z.coerce.number().int().positive('Age group is required'),
+  selectedEvents: z
+    .array(z.coerce.number().int().positive())
+    .max(MAX_EVENTS_PER_PERSON, `Maximum ${MAX_EVENTS_PER_PERSON} events per person`)
+    .default([]),
+});
+
+const signupSchema = z.object({
+  guardianName: z.string().trim().min(1, 'Your name is required').max(120),
+  guardianPhone: z.string().trim().min(3, 'A phone number is required').max(40),
+  guardianEmail: z
+    .union([z.string().trim().email('Invalid email address'), z.literal('')])
+    .nullish()
+    .transform((v) => (v ? v : null)),
+  participants: z
+    .array(participantSchema)
+    .min(1, 'At least one participant is required')
+    .max(20, 'Too many participants in one submission'),
+});
 
 export type SignupSuccessParticipant = {
   name: string;
@@ -21,30 +45,48 @@ export type SignupResult = {
 };
 
 export async function submitSignup(formData: FormData): Promise<SignupResult> {
-  const guardianName = formData.get('guardianName') as string;
-  const guardianPhone = formData.get('guardianPhone') as string;
-  const guardianEmail = formData.get('guardianEmail') as string || null;
+  const participantsJson = formData.get('participants');
 
-  const participantsJson = formData.get('participants') as string;
-  const participantsList = JSON.parse(participantsJson);
-
-  if (!guardianName || !guardianPhone || !participantsList?.length) {
-    throw new Error('Missing required information');
+  let rawParticipants: unknown;
+  try {
+    rawParticipants = JSON.parse(
+      typeof participantsJson === 'string' ? participantsJson : '[]'
+    );
+  } catch {
+    throw new Error('Invalid participant data.');
   }
+
+  const parsed = signupSchema.safeParse({
+    guardianName: formData.get('guardianName'),
+    guardianPhone: formData.get('guardianPhone'),
+    guardianEmail: formData.get('guardianEmail'),
+    participants: rawParticipants,
+  });
+
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0]?.message ?? 'Invalid submission.');
+  }
+
+  const {
+    guardianName,
+    guardianPhone,
+    guardianEmail,
+    participants: participantsList,
+  } = parsed.data;
 
   // Find or create guardian
   let guardian = await db
     .select()
     .from(guardians)
-    .where(eq(guardians.phone, guardianPhone.trim()))
+    .where(eq(guardians.phone, guardianPhone))
     .get();
 
   if (!guardian) {
     guardian = await db
       .insert(guardians)
       .values({
-        name: guardianName.trim(),
-        phone: guardianPhone.trim(),
+        name: guardianName,
+        phone: guardianPhone,
         email: guardianEmail,
       })
       .returning()
@@ -54,15 +96,13 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
   const createdParticipants: SignupSuccessParticipant[] = [];
 
   for (const p of participantsList) {
-    if (!p.name?.trim()) continue;
-
     const masterToken = randomUUID();
 
     // Create participant (guardian_id is set for children, null for adults)
     const participant = await db
       .insert(participants)
       .values({
-        name: p.name.trim(),
+        name: p.name,
         guardianId: p.type === 'child' ? guardian.id : null,
         ageGroupId: p.ageGroupId,
         masterCheckinToken: masterToken,
@@ -70,12 +110,12 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
       .returning()
       .get();
 
-    // Enforce max 4 events (defense in depth)
-    const selectedEventIds = (p.selectedEvents || []).slice(0, MAX_EVENTS_PER_PERSON);
+    // Enforce max events (defense in depth; schema already caps this)
+    const selectedEventIds = p.selectedEvents.slice(0, MAX_EVENTS_PER_PERSON);
 
     for (const eventId of selectedEventIds) {
       await db.insert(registrations).values({
-        eventId: Number(eventId),
+        eventId,
         participantId: participant.id,
         source: 'portal',
         checkinToken: randomUUID().slice(0, 8),

@@ -27,6 +27,8 @@ turso db tokens create sacfunday-prod
 You will need:
 - `DATABASE_URL`
 - `DATABASE_AUTH_TOKEN`
+- `ADMIN_PIN` (a simple code the Organizing Committee will use to access the admin area)
+- `SESSION_SECRET` (a long random string used to sign admin session cookies — generate with `openssl rand -hex 32`)
 
 ## Step 2: Push Schema and Seed
 
@@ -45,20 +47,27 @@ npm run db:seed
 3. Add the following Environment Variables:
    - `DATABASE_URL`
    - `DATABASE_AUTH_TOKEN`
+   - `ADMIN_PIN` (the PIN the OC will use to log into the admin area)
+   - `SESSION_SECRET` (a long random string used to sign session cookies)
 
 4. Deploy.
 
 ## Environment Variables
 
-| Variable                | Description                     | Required |
-|-------------------------|----------------------------------|----------|
-| `DATABASE_URL`          | Turso database URL               | Yes      |
-| `DATABASE_AUTH_TOKEN`   | Turso auth token                 | Yes      |
+| Variable                | Description                                      | Required |
+|-------------------------|--------------------------------------------------|----------|
+| `DATABASE_URL`          | Turso database URL                               | Yes      |
+| `DATABASE_AUTH_TOKEN`   | Turso auth token                                 | Yes      |
+| `ADMIN_PIN`             | PIN used to log into the OC Admin Area (/admin)  | Yes      |
+| `SESSION_SECRET`        | Secret key that signs admin session cookies      | Yes      |
+
+**Note on Admin Access:** After deployment, visit `/login` and enter the `ADMIN_PIN` value to access the protected admin tools. Sessions are stored in a signed, expiring cookie (HMAC-SHA256, keyed by `SESSION_SECRET`) so they cannot be forged.
 
 ## Notes
 
-- The admin section currently has no authentication. Consider adding protection before making the site public.
+- The admin section (`/admin`) is protected by a PIN login at `/login`. Set both `ADMIN_PIN` and `SESSION_SECRET` before deploying, or the admin area will be inaccessible.
 - For production use, review and harden the "Current Operator" pattern used for audit trails.
+- The PIN system is intentionally lightweight (no user accounts). It is suitable for a small trusted Organizing Committee.
 
 ## Useful Commands
 
