@@ -3,8 +3,11 @@
 import { db } from '@/lib/db/client';
 import { participants, registrations, events } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { requireUser } from '@/lib/auth';
 
 export async function checkInWithMasterToken(eventId: number, masterToken: string) {
+  await requireUser();
+
   // Find participant by master token
   const participant = await db
     .select()
