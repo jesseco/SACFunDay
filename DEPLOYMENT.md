@@ -27,7 +27,6 @@ turso db tokens create sacfunday-prod
 You will need:
 - `DATABASE_URL`
 - `DATABASE_AUTH_TOKEN`
-- `ADMIN_PIN` (a simple code the Organizing Committee will use to access the admin area)
 - `SESSION_SECRET` (a long random string used to sign admin session cookies — generate with `openssl rand -hex 32`)
 
 ## Step 2: Push Schema and Seed
@@ -47,10 +46,25 @@ npm run db:seed
 3. Add the following Environment Variables:
    - `DATABASE_URL`
    - `DATABASE_AUTH_TOKEN`
-   - `ADMIN_PIN` (the PIN the OC will use to log into the admin area)
    - `SESSION_SECRET` (a long random string used to sign session cookies)
 
 4. Deploy.
+
+## Step 4: Create the First Admin
+
+The admin area uses per-user accounts (username + password). Create the first
+admin once, then add the rest of the committee from within the app at
+`/admin/users`.
+
+```bash
+# Run against the same database the app uses (set DATABASE_URL / token first)
+SEED_ADMIN_USER=jesse \
+SEED_ADMIN_PASSWORD='a-strong-password' \
+SEED_ADMIN_NAME='Jesse Co' \
+npm run create-admin
+```
+
+This is idempotent — it does nothing if any user already exists.
 
 ## Environment Variables
 
@@ -58,16 +72,23 @@ npm run db:seed
 |-------------------------|--------------------------------------------------|----------|
 | `DATABASE_URL`          | Turso database URL                               | Yes      |
 | `DATABASE_AUTH_TOKEN`   | Turso auth token                                 | Yes      |
-| `ADMIN_PIN`             | PIN used to log into the OC Admin Area (/admin)  | Yes      |
 | `SESSION_SECRET`        | Secret key that signs admin session cookies      | Yes      |
+| `SEED_ADMIN_USER`       | Username for the first-admin bootstrap script    | Bootstrap only |
+| `SEED_ADMIN_PASSWORD`   | Password for the first-admin bootstrap script    | Bootstrap only |
+| `SEED_ADMIN_NAME`       | Display name for the first admin                 | Bootstrap only |
 
-**Note on Admin Access:** After deployment, visit `/login` and enter the `ADMIN_PIN` value to access the protected admin tools. Sessions are stored in a signed, expiring cookie (HMAC-SHA256, keyed by `SESSION_SECRET`) so they cannot be forged.
+**Note on Admin Access:** Each OC member signs in at `/login` with their own
+username and password. There are two roles — **Admin** (full access) and
+**Marshal** (results entry + station check-in). Sessions are stored in a
+signed, expiring cookie (HMAC-SHA256, keyed by `SESSION_SECRET`) carrying the
+user id and role, so they cannot be forged. Results are attributed to the
+logged-in user automatically.
 
 ## Notes
 
-- The admin section (`/admin`) is protected by a PIN login at `/login`. Set both `ADMIN_PIN` and `SESSION_SECRET` before deploying, or the admin area will be inaccessible.
-- For production use, review and harden the "Current Operator" pattern used for audit trails.
-- The PIN system is intentionally lightweight (no user accounts). It is suitable for a small trusted Organizing Committee.
+- Set `SESSION_SECRET` before deploying, then run the create-admin step, or the admin area will be inaccessible.
+- Admins manage members at `/admin/users` — add, deactivate, change role, and reset passwords. Deactivating a member blocks them on their next request.
+- Passwords are hashed with scrypt; only the hash is stored.
 
 ## Useful Commands
 

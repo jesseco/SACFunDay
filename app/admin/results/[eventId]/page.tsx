@@ -1,7 +1,8 @@
 import { db } from '@/lib/db/client';
-import { events, registrations, participants, results, ageGroups, settings } from '@/lib/db/schema';
+import { events, registrations, participants, results, ageGroups } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import { requireUser } from '@/lib/auth';
 import ResultEntryForm from './ResultEntryForm';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default async function ResultEntryPage({ params }: Props) {
+  const user = await requireUser();
   const { eventId: eventIdParam } = await params;
   const eventId = parseInt(eventIdParam);
 
@@ -71,15 +73,6 @@ export default async function ResultEntryPage({ params }: Props) {
     existingResults.map(r => [r.registrationId, r])
   );
 
-  // Get current operator from settings (stored as "OPERATOR: Name" in notes)
-  const currentSettings = await db.select().from(settings).limit(1).get();
-  let defaultOperator = '';
-  const settingsWithNotes = currentSettings as any;
-  if (settingsWithNotes?.notes) {
-    const match = settingsWithNotes.notes.match(/OPERATOR:\s*(.+)/);
-    if (match) defaultOperator = match[1].trim();
-  }
-
   return (
     <div className="max-w-4xl">
       <div className="mb-6">
@@ -95,11 +88,9 @@ export default async function ResultEntryPage({ params }: Props) {
             <span className="ml-2 text-xs px-2 py-0.5 rounded bg-zinc-200">Event Completed</span>
           )}
         </p>
-        {defaultOperator && (
-          <p className="text-sm text-emerald-700 mt-1">
-            Current operator: <strong>{defaultOperator}</strong>
-          </p>
-        )}
+        <p className="text-sm text-emerald-700 mt-1">
+          Entering as <strong>{user.name}</strong>
+        </p>
       </div>
 
       <ResultEntryForm
@@ -109,7 +100,7 @@ export default async function ResultEntryPage({ params }: Props) {
         existingResults={resultsMap}
         isComplete={event.isComplete}
         totalRegistered={registeredParticipants.length}
-        defaultOperator={defaultOperator}
+        enteredByName={user.name}
       />
 
       <div className="mt-8 text-xs text-zinc-400">

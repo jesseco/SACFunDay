@@ -1,6 +1,18 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 
+// OC members who can log into the admin area.
+// Provisioned by an admin; password is a scrypt hash ("salt:hash" hex).
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  username: text("username").notNull().unique(), // stored lowercased
+  name: text("name").notNull(), // display name, used for result attribution
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").notNull().default("marshal"), // admin | marshal
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+});
+
 // Age groups / Sunday school classes (reusable)
 export const ageGroups = sqliteTable("age_groups", {
   id: integer("id").primaryKey({ autoIncrement: true }),

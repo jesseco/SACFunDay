@@ -5,8 +5,10 @@ import { guardians, participants, registrations, events, ageGroups } from '@/lib
 import { eq, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { randomUUID } from 'crypto';
+import { requireUser } from '@/lib/auth';
 
 export async function createParticipant(formData: FormData) {
+  await requireUser('admin');
   const childName = formData.get('childName') as string;
   const ageGroupId = parseInt(formData.get('ageGroupId') as string);
   const guardianName = formData.get('guardianName') as string;
@@ -68,6 +70,7 @@ export async function createParticipant(formData: FormData) {
 }
 
 export async function deleteParticipant(id: number) {
+  await requireUser('admin');
   // Delete registrations first
   await db.delete(registrations).where(eq(registrations.participantId, id));
   await db.delete(participants).where(eq(participants.id, id));
@@ -76,6 +79,7 @@ export async function deleteParticipant(id: number) {
 
 // Bulk import from CSV data
 export async function importParticipantsCSV(rows: Record<string, unknown>[]) {
+  await requireUser('admin');
   let created = 0;
   let skipped = 0;
 

@@ -140,7 +140,6 @@ export default function ParticipantsClient({ participants: initialParticipants, 
     <div className="max-w-6xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-semibold tracking-tight">Participants ({participants.length})</h1>
-        <p className="text-xs text-zinc-500 -mt-1">Staff members are highlighted with an amber background and &quot;Staff&quot; badge.</p>
         <div className="flex gap-2">
           <Button variant="outline" onClick={exportCSV}>
             Export CSV
@@ -171,17 +170,11 @@ export default function ParticipantsClient({ participants: initialParticipants, 
               </thead>
               <tbody>
                 {participants.map((p) => {
-                  const isStaff = p.notes?.includes("Staff") || p.notes?.includes("OC");
                   return (
-                    <tr key={p.id} className={`border-b last:border-0 hover:bg-zinc-50 ${isStaff ? "bg-amber-50" : ""}`}>
+                    <tr key={p.id} className="border-b last:border-0 hover:bg-zinc-50">
                       <td className="py-2.5 font-mono text-xs text-zinc-500">{p.bib || '—'}</td>
-                      <td className="py-2.5 font-medium flex items-center gap-2">
+                      <td className="py-2.5 font-medium">
                         {p.name}
-                        {isStaff && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-200 text-amber-800 font-medium">
-                            Staff
-                          </span>
-                        )}
                       </td>
                       <td className="py-2.5 text-zinc-600">{p.ageGroup}</td>
                       <td className="py-2.5">{p.guardian}</td>

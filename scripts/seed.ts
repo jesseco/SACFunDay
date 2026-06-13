@@ -320,79 +320,13 @@ async function main() {
   }
   console.log(`✓ ${regularAdultCount} regular self-adult participants + registrations created`);
 
-  // Create 5 OC (Organizing Committee) staff members as adult participants
-  // Using role-based names (Option A) for public repository clarity
-  const ocMembers = [
-    { name: "OC Coordinator", ageGroup: "Ages 45-60", birthYear: 1972 },
-    { name: "The Stand Lead", ageGroup: "Ages 30-45", birthYear: 1985 },
-    { name: "Results Lead", ageGroup: "University+ (Ages 18-30)", birthYear: 1998 },
-    { name: "Announcements Lead", ageGroup: "Ages 45-60", birthYear: 1970 },
-    { name: "Check-in Lead", ageGroup: "Ages 30-45", birthYear: 1988 },
-  ];
-
-  let adultCount = 0;
-
-  for (const oc of ocMembers) {
-    const ageGroupId = ageGroupMap[oc.ageGroup];
-    if (!ageGroupId) continue;
-
-    // Create a self-guardian for the OC member
-    const selfGuardian = await db
-      .insert(guardians)
-      .values({
-        name: oc.name,
-        phone: `+65 9${String(1000000 + adultCount).padStart(7, '0')}`,
-        email: undefined,
-      })
-      .returning()
-      .get();
-
-    const adult = await db
-      .insert(participants)
-      .values({
-        name: oc.name,
-        guardianId: selfGuardian.id,
-        ageGroupId,
-        birthYear: oc.birthYear,
-        masterCheckinToken: randomUUID(),
-        notes: "OC / Staff",
-      })
-      .returning()
-      .get();
-
-    // Register each OC member to 2-3 events
-    const adultEvents = insertedEvents.filter(e => e.ageGroupId === ageGroupId);
-    const numEvents = Math.min(adultEvents.length, 2 + (adultCount % 2));
-
-    const shuffledAdultEvents = [...adultEvents].sort(() => 0.5 - Math.random());
-    const selectedAdultEvents = shuffledAdultEvents.slice(0, numEvents);
-
-    for (const ev of selectedAdultEvents) {
-      await db.insert(registrations).values({
-        eventId: ev.id,
-        participantId: adult.id,
-        source: 'portal',
-        checkinToken: generateToken(),
-      }).onConflictDoNothing().run();
-    }
-
-    adultCount++;
-  }
-
-  console.log(`✓ ${adultCount} OC staff members + registrations created`);
-
   // 5. Generate sample results (for demo purposes - makes the app feel alive)
   console.log("Generating sample results for demo...");
   let resultsCreated = 0;
 
-  // 5 OC staff roles for realistic audit trails (using fictional role-based names)
-  const ocNames = [
-    "OC Coordinator",
-    "The Stand Lead",
-    "Results Lead",
-    "Announcements Lead",
-    "Check-in Lead",
-  ];
+  // Generic demo attributions for sample results. Real results are attributed
+  // to the logged-in OC member; this is only to populate the demo audit trail.
+  const ocNames = ["Demo Entry"];
 
   // Pick 4 events to mark as complete with results (lighter demo)
   const eventsToComplete = insertedEvents
@@ -478,7 +412,7 @@ async function main() {
   console.log(`   - ${insertedAgeGroups.length} age groups`);
   console.log(`   - ${insertedEvents.length} events`);
   console.log(`   - ${insertedGuardians.length} guardians`);
-  console.log(`   - ${kidCount} children + 5 regular adults + ${adultCount} OC staff (25 participants total, using fictional demo data)`);
+  console.log(`   - ${kidCount} children + ${regularAdultCount} regular adults (using fictional demo data)`);
   console.log(`   - ${resultsCreated} sample results across ${eventsToComplete.length} completed events (entered by OC)`);
 }
 

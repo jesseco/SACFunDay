@@ -4,8 +4,10 @@ import { db } from '@/lib/db/client';
 import { events } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireUser } from '@/lib/auth';
 
 export async function createEvent(formData: FormData) {
+  await requireUser('admin');
   const name = formData.get('name') as string;
   const type = formData.get('type') as string;
   const unit = formData.get('unit') as string || null;
@@ -31,6 +33,7 @@ export async function createEvent(formData: FormData) {
 }
 
 export async function updateEvent(formData: FormData) {
+  await requireUser('admin');
   const id = parseInt(formData.get('id') as string);
   const name = formData.get('name') as string;
   const type = formData.get('type') as string;
@@ -59,6 +62,7 @@ export async function updateEvent(formData: FormData) {
 }
 
 export async function deleteEvent(id: number) {
+  await requireUser('admin');
   // Note: In a real app we'd check for existing registrations/results first
   await db.delete(events).where(eq(events.id, id));
   revalidatePath('/admin/events');

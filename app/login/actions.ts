@@ -1,27 +1,41 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken } from "@/lib/auth";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db/client";
+import { users } from "@/lib/db/schema";
+import {
+  SESSION_COOKIE,
+  SESSION_MAX_AGE,
+  createSessionToken,
+  verifyPassword,
+  type Role,
+} from "@/lib/auth";
 
-export async function verifyPin(formData: FormData): Promise<{ error?: string }> {
-  const pin = formData.get("pin") as string;
-  const adminPin = process.env.ADMIN_PIN;
+export async function login(formData: FormData): Promise<{ error?: string }> {
+  const username = (formData.get("username") as string | null)?.trim().toLowerCase();
+  const password = formData.get("password") as string | null;
 
-  if (!adminPin) {
-    return { error: "Admin PIN not configured. Set ADMIN_PIN in environment variables." };
+  if (!username || !password) {
+    return { error: "Please enter your username and password." };
   }
 
-  if (!pin || pin.trim() === "") {
-    return { error: "Please enter a PIN." };
-  }
+  const user = await db
+    .select()
+    .from(users)
+    .where(eq(users.username, username))
+    .get();
 
-  if (pin !== adminPin) {
-    return { error: "Incorrect PIN." };
-  }
+  // Generic message either way — don't reveal whether the username exists.
+  const invalid = { error: "Invalid username or password." };
 
-  // Set signed session cookie (expires in 24 hours)
+  if (!user || !user.isActive) return invalid;
+
+  const ok = await verifyPassword(password, user.passwordHash);
+  if (!ok) return invalid;
+
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, await createSessionToken(), {
+  cookieStore.set(SESSION_COOKIE, await createSessionToken(user.id, user.role as Role), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

@@ -28,7 +28,7 @@ interface ResultEntryFormProps {
   existingResults: Map<number, ExistingResult>;
   isComplete: boolean;
   totalRegistered: number;
-  defaultOperator?: string;
+  enteredByName: string;
 }
 
 const PLACE_OPTIONS = [1, 2, 3, 4];
@@ -46,7 +46,7 @@ export default function ResultEntryForm({
   existingResults,
   isComplete: initialComplete,
   totalRegistered,
-  defaultOperator = '',
+  enteredByName,
 }: ResultEntryFormProps) {
   const [results, setResults] = useState<Record<number, Record<string, any>>>(() => {
     const initial: Record<number, any> = {};
@@ -77,15 +77,6 @@ export default function ResultEntryForm({
   const [isComplete, setIsComplete] = useState(initialComplete);
   const [previousStates, setPreviousStates] = useState<Record<number, Record<string, any>>>({});
 
-  // Global "Entered by" for this session (persisted in localStorage for convenience)
-  const [enteredByName, setEnteredByName] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('resultEnteredBy');
-      if (saved) return saved;
-    }
-    return defaultOperator || '';
-  });
-
   // Live progress count based on local state
   const enteredCount = Object.values(results).filter((r: any) =>
     r.place !== null || r.status !== 'ok' || r.performanceValue
@@ -93,14 +84,13 @@ export default function ResultEntryForm({
 
   const updateWithAudit = (regId: number, updates: Record<string, any>) => {
     const now = new Date();
-    const enteredBy = enteredByName.trim() || 'OC';
     setResults((prev) => ({
       ...prev,
       [regId]: {
         ...prev[regId],
         ...updates,
         enteredAt: now,
-        enteredBy,
+        enteredBy: enteredByName,
       },
     }));
   };
@@ -195,7 +185,7 @@ export default function ResultEntryForm({
     const current = results[regId];
     const dataToSave = {
       ...current,
-      enteredBy: enteredByName.trim() || current.enteredBy || 'OC',
+      enteredBy: enteredByName,
     };
 
     setSaving((prev) => ({ ...prev, [regId]: true }));
@@ -248,13 +238,6 @@ export default function ResultEntryForm({
 
   const progressPercent = totalRegistered > 0 ? Math.round((enteredCount / totalRegistered) * 100) : 0;
 
-  const handleEnteredByChange = (value: string) => {
-    setEnteredByName(value);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('resultEnteredBy', value);
-    }
-  };
-
   return (
     <div className="space-y-3">
       {/* Progress Header */}
@@ -274,17 +257,10 @@ export default function ResultEntryForm({
           />
         </div>
 
-        {/* Entered By - Global for this session (very useful on event day) */}
-        <div className="flex items-center gap-3 mt-3">
-          <label className="text-sm font-medium text-zinc-700 whitespace-nowrap">Entered by:</label>
-          <input
-            type="text"
-            value={enteredByName}
-            onChange={(e) => handleEnteredByChange(e.target.value)}
-            placeholder="e.g. Margaret Tan or OC Desk"
-            className="border border-zinc-300 rounded-lg px-3 py-1.5 text-sm w-72 focus:outline-none focus:border-emerald-500"
-          />
-          <span className="text-xs text-zinc-500">This name will be saved with new results</span>
+        {/* Entered By - tied to the logged-in user; saved with every result */}
+        <div className="flex items-center gap-2 mt-3 text-sm text-zinc-600">
+          <span className="font-medium text-zinc-700">Entered by:</span>
+          <span>{enteredByName}</span>
         </div>
       </div>
       {participants.map((p) => {

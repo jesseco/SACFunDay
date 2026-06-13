@@ -4,8 +4,10 @@ import { db } from '@/lib/db/client';
 import { settings } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireUser } from '@/lib/auth';
 
 export async function updateEventDaySettings(formData: FormData) {
+  await requireUser('admin');
   const eventTitle = formData.get('eventTitle') as string;
   const eventDate = formData.get('eventDate') as string;
   const description = formData.get('description') as string;

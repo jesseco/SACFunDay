@@ -4,8 +4,11 @@ import { db } from '@/lib/db/client';
 import { results, events } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireUser } from '@/lib/auth';
 
 export async function saveResult(eventId: number, registrationId: number, data: Record<string, unknown>) {
+  const user = await requireUser();
+
   const existing = await db
     .select()
     .from(results)
@@ -18,7 +21,8 @@ export async function saveResult(eventId: number, registrationId: number, data: 
     status: (data.status as string) || 'ok',
     source: (data.source as string) || 'app',
     enteredAt: new Date(),
-    enteredBy: (typeof data.enteredBy === 'string' ? data.enteredBy.trim() : null) || 'OC',
+    // Attribution comes from the logged-in user, never the client.
+    enteredBy: user.name,
   };
 
   if (existing) {
@@ -37,6 +41,7 @@ export async function saveResult(eventId: number, registrationId: number, data: 
 }
 
 export async function markEventComplete(eventId: number) {
+  await requireUser();
   await db
     .update(events)
     .set({ isComplete: true })

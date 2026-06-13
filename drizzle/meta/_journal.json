@@ -8,6 +8,13 @@
       "when": 1779948494572,
       "tag": "0000_flat_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1781265584888,
+      "tag": "0001_slippery_madame_hydra",
+      "breakpoints": true
     }
   ]
 }

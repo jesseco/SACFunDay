@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
-import { verifyPin } from "./actions";
+import { login } from "./actions";
 
 function LoginForm() {
   const router = useRouter();
@@ -20,7 +20,7 @@ function LoginForm() {
     const formData = new FormData(e.currentTarget);
 
     startTransition(async () => {
-      const result = await verifyPin(formData);
+      const result = await login(formData);
       if (result.error) {
         setError(result.error);
       } else {
@@ -40,20 +40,38 @@ function LoginForm() {
           SACFunDay Admin
         </h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Enter the committee PIN to continue
+          Sign in with your committee account
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
+          <label htmlFor="username" className="block text-sm font-medium mb-1">
+            Username
+          </label>
           <input
-            type="password"
-            name="pin"
-            inputMode="numeric"
-            autoComplete="off"
+            id="username"
+            type="text"
+            name="username"
+            autoComplete="username"
+            autoCapitalize="none"
             autoFocus
-            placeholder="Enter PIN"
-            className="w-full rounded-md border border-zinc-300 px-4 py-3 text-center text-lg tracking-widest placeholder:text-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+            placeholder="e.g. jane"
+            className="w-full rounded-md border border-zinc-300 px-4 py-3 placeholder:text-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium mb-1">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="Enter password"
+            className="w-full rounded-md border border-zinc-300 px-4 py-3 placeholder:text-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           />
         </div>
 
@@ -66,7 +84,7 @@ function LoginForm() {
           disabled={isPending}
           className="w-full rounded-md bg-emerald-600 px-4 py-3 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50"
         >
-          {isPending ? "Checking…" : "Enter"}
+          {isPending ? "Signing in…" : "Sign in"}
         </button>
       </form>
     </div>
