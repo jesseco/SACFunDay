@@ -36,6 +36,9 @@ export default function ParentSignup() {
   const [guardianPhone, setGuardianPhone] = useState('');
   const [guardianEmail, setGuardianEmail] = useState('');
 
+  const [lunchCount, setLunchCount] = useState(0);
+  const [paymentFile, setPaymentFile] = useState<File | null>(null);
+
   const [participants, setParticipants] = useState<Participant[]>([
     { id: 1, type: 'child', name: '', selectedEvents: [] },
   ]);
@@ -43,7 +46,8 @@ export default function ParentSignup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successData, setSuccessData] = useState<SignupSuccessParticipant[] | null>(null);
 
-  // Youth groups for filtering the age dropdown (children see these, adults see the rest)
+  // Youth groups for filtering the age dropdown (children see these, adults see the rest).
+  // Update this list if the age groups are changed for the year.
   const youthAgeGroupNames = [
     "Kindergarten",
     "Lower Primary (P.1-3)",
@@ -134,6 +138,11 @@ export default function ParentSignup() {
     formData.set('guardianName', guardianName);
     formData.set('guardianPhone', guardianPhone);
     formData.set('guardianEmail', guardianEmail || '');
+    formData.set('lunchCount', lunchCount.toString());
+
+    if (paymentFile) {
+      formData.set('paymentProof', paymentFile);
+    }
 
     // Serialize participants (simple JSON for now)
     formData.set('participants', JSON.stringify(participants));
@@ -205,6 +214,8 @@ export default function ParentSignup() {
                 setGuardianName('');
                 setGuardianPhone('');
                 setGuardianEmail('');
+                setLunchCount(0);
+                setPaymentFile(null);
                 setParticipants([{ id: Date.now(), type: 'child', name: '', selectedEvents: [] }]);
               }}
               className="flex-1 h-12 rounded-full border flex items-center justify-center hover:bg-white font-medium"
@@ -245,7 +256,10 @@ export default function ParentSignup() {
           You can sign up yourself (as an adult) and/or your children.
         </p>
         <p className="text-sm text-orange-600 mb-8">
-          Maximum 4 events per participant.
+          Maximum 4 events per participant. A $20 sign-up / lunch fee applies.
+        </p>
+        <p className="text-xs text-zinc-500 mb-4">
+          Note: Events and age groups may have been updated for this year — please select carefully.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -284,6 +298,47 @@ export default function ParentSignup() {
                   className="w-full border rounded-lg px-4 h-11"
                   placeholder="your@email.com"
                 />
+              </div>
+            </div>
+          </div>
+
+          {/* Lunch, Fee & Payment */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+            <h2 className="font-semibold text-lg mb-2">Lunch & Payment</h2>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                How many people (including yourself and any children you are registering) will be joining lunch?
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={lunchCount}
+                onChange={(e) => setLunchCount(Math.max(0, parseInt(e.target.value) || 0))}
+                className="w-32 border rounded-lg px-4 h-11"
+              />
+              <p className="text-xs text-zinc-500 mt-1">This helps us plan catering.</p>
+            </div>
+
+            <div className="pt-2 border-t">
+              <p className="text-sm font-medium mb-2">
+                A <strong>$20 sign-up / lunch fee</strong> applies (per person registered or attending lunch).
+                Please make payment and upload proof below.
+              </p>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Proof of Payment *</label>
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={(e) => setPaymentFile(e.target.files?.[0] || null)}
+                  className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                  required
+                />
+                {paymentFile && (
+                  <p className="text-xs text-emerald-600 mt-1">Selected: {paymentFile.name}</p>
+                )}
+                <p className="text-xs text-zinc-500 mt-1">Upload a screenshot or photo of your payment receipt.</p>
               </div>
             </div>
           </div>

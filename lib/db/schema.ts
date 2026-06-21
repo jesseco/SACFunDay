@@ -40,6 +40,8 @@ export const guardians = sqliteTable("guardians", {
   name: text("name").notNull(),
   phone: text("phone").notNull(), // primary contact
   email: text("email"),
+  lunchAttendees: integer("lunch_attendees").notNull().default(0),
+  paymentProof: text("payment_proof"), // URL to payment receipt/screenshot in Vercel Blob Storage
   notes: text("notes"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 });

@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import QRCode from 'qrcode';
 import { z } from 'zod';
+import { put } from '@vercel/blob';
 
 const MAX_EVENTS_PER_PERSON = 4;
 
@@ -74,6 +75,11 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
     participants: participantsList,
   } = parsed.data;
 
+  const lunchCountStr = formData.get('lunchCount') as string | null;
+  const lunchAttendees = lunchCountStr ? parseInt(lunchCountStr, 10) || 0 : 0;
+
+  const paymentFile = formData.get('paymentProof') as File | null;
+
   // Find or create guardian
   let guardian = await db
     .select()
@@ -81,16 +87,44 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
     .where(eq(guardians.phone, guardianPhone))
     .get();
 
+  // Require payment proof for new sign-ups (or if no previous proof on file)
+  if (!paymentFile && (!guardian || !guardian.paymentProof)) {
+    throw new Error('Please upload proof of the $20 payment.');
+  }
+
+  let paymentProofUrl: string | null = null;
+  if (paymentFile && paymentFile instanceof File && paymentFile.size > 0) {
+    // Upload to Vercel Blob Storage
+    const filename = `payment-proof/${guardianPhone.replace(/\s+/g, '')}-${Date.now()}-${paymentFile.name}`;
+    const blob = await put(filename, paymentFile, {
+      access: 'public',
+      addRandomSuffix: false,
+    });
+    paymentProofUrl = blob.url;
+  }
+
   if (!guardian) {
     guardian = await db
       .insert(guardians)
       .values({
-        name: guardianName,
-        phone: guardianPhone,
+        name: guardianName.trim(),
+        phone: guardianPhone.trim(),
         email: guardianEmail,
+        lunchAttendees,
+        paymentProof: paymentProofUrl,
       })
       .returning()
       .get();
+  } else {
+    // Update existing guardian's lunch and payment info
+    await db
+      .update(guardians)
+      .set({
+        lunchAttendees,
+        paymentProof: paymentProofUrl ?? guardian.paymentProof,
+      })
+      .where(eq(guardians.id, guardian.id))
+      .run();
   }
 
   const createdParticipants: SignupSuccessParticipant[] = [];
