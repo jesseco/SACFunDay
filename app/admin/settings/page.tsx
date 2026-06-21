@@ -87,42 +87,23 @@ export default async function EventDaySettings() {
             <div>
               <h3 className="font-semibold mb-4">Parent Sign-up Portal</h3>
 
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-emerald-50 border border-emerald-200">
                 <input
                   type="checkbox"
                   id="portalOpen"
                   name="portalOpen"
                   defaultChecked={currentSettings?.portalOpen ?? false}
-                  className="h-4 w-4"
+                  className="h-5 w-5"
                 />
-                <Label htmlFor="portalOpen" className="cursor-pointer">
-                  Portal is currently <strong>OPEN</strong> for parents to sign up
+                <Label htmlFor="portalOpen" className="cursor-pointer text-base">
+                  <span className="font-semibold">
+                    {currentSettings?.portalOpen ? '✅ Portal is OPEN' : '⏸️ Portal is CLOSED'}
+                  </span>
+                  <span className="block text-sm text-zinc-600 mt-1">
+                    Check this box to allow parents to sign up
+                  </span>
                 </Label>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="portalOpensAt">Portal Opens At</Label>
-                  <Input
-                    id="portalOpensAt"
-                    name="portalOpensAt"
-                    type="datetime-local"
-                    defaultValue={currentSettings?.portalOpensAt ? new Date(currentSettings.portalOpensAt).toISOString().slice(0, 16) : ''}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="portalClosesAt">Portal Closes At</Label>
-                  <Input
-                    id="portalClosesAt"
-                    name="portalClosesAt"
-                    type="datetime-local"
-                    defaultValue={currentSettings?.portalClosesAt ? new Date(currentSettings.portalClosesAt).toISOString().slice(0, 16) : ''}
-                  />
-                </div>
-              </div>
-              <p className="text-xs text-zinc-500 mt-2">
-                If dates are set, the portal will automatically respect the open/close window (in addition to the manual toggle).
-              </p>
             </div>
 
             <Button type="submit" className="mt-6">

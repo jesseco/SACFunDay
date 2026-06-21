@@ -15,8 +15,6 @@ export async function updateEventDaySettings(formData: FormData) {
   const currentOperator = formData.get('currentOperator') as string;
 
   const portalOpen = formData.get('portalOpen') === 'on';
-  const portalOpensAt = formData.get('portalOpensAt') as string || null;
-  const portalClosesAt = formData.get('portalClosesAt') as string || null;
 
   // Get existing settings or create new
   const existing = await db.select().from(settings).limit(1).get();
@@ -27,8 +25,6 @@ export async function updateEventDaySettings(formData: FormData) {
     // Store operator + other info in notes using a simple convention
     notes: buildNotesField(currentOperator, description, mainLocation),
     portalOpen,
-    portalOpensAt: portalOpensAt ? new Date(portalOpensAt) : null,
-    portalClosesAt: portalClosesAt ? new Date(portalClosesAt) : null,
     updatedAt: new Date(),
   };
 
