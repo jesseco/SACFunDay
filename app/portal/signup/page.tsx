@@ -379,19 +379,23 @@ export default function ParentSignup() {
 
               // Add family relay events based on eligibility
               if (participantAgeGroup) {
-                // Kindergarten Family Relay: available to Kindergarten participants
+                const isAdult = participantAgeGroup.name === 'Women' ||
+                                participantAgeGroup.name === 'Men 49 or below' ||
+                                participantAgeGroup.name === 'Men 50+';
+
+                // Kindergarten Family Relay: Kindergarten children OR any adult
                 const kindergartenRelayEvent = ageGroups
                   .flatMap(ag => ag.events)
                   .find((e: any) => e.name === 'Kindergarten Family Relay');
 
-                if (kindergartenRelayEvent && participantAgeGroup.name === 'Kindergarten') {
-                  // Only add if not already in their events
+                if (kindergartenRelayEvent &&
+                    (participantAgeGroup.name === 'Kindergarten' || isAdult)) {
                   if (!availableEvents.some((e: any) => e.id === kindergartenRelayEvent.id)) {
                     availableEvents = [...availableEvents, kindergartenRelayEvent];
                   }
                 }
 
-                // Primary & Secondary Family Relay: available to G1-3, G4-6, S1-S6, and ALL other age groups
+                // Primary & Secondary Family Relay: G1-3, G4-6, S1-S6 children OR any adult
                 const primaryRelayEvent = ageGroups
                   .flatMap(ag => ag.events)
                   .find((e: any) => e.name === 'Primary & Secondary Family Relay');
@@ -400,10 +404,7 @@ export default function ParentSignup() {
                     (participantAgeGroup.name === 'G1-3' ||
                      participantAgeGroup.name === 'G4-6' ||
                      participantAgeGroup.name === 'S1-S6' ||
-                     participantAgeGroup.name === 'Women' ||
-                     participantAgeGroup.name === 'Men 49 or below' ||
-                     participantAgeGroup.name === 'Men 50+')) {
-                  // Only add if not already in their events
+                     isAdult)) {
                   if (!availableEvents.some((e: any) => e.id === primaryRelayEvent.id)) {
                     availableEvents = [...availableEvents, primaryRelayEvent];
                   }
