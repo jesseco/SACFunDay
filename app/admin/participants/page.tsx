@@ -25,6 +25,10 @@ export default async function ParticipantsPage() {
     guardianPhone: row.guardians?.phone ?? '',
     guardianEmail: row.guardians?.email ?? null,
     notes: row.participants.notes,
+    // Payment info
+    guardianId: row.participants.guardianId,
+    lunchCount: row.guardians?.lunchAttendees ?? 0,
+    paymentProof: row.guardians?.paymentProof ?? null,
   }));
 
   return <ParticipantsClient participants={kids} ageGroups={ageGroupList} />;

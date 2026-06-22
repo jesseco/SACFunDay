@@ -33,6 +33,9 @@ type Participant = {
   guardianPhone: string;
   guardianEmail: string | null;
   notes: string | null;
+  guardianId: number | null;
+  lunchCount: number;
+  paymentProof: string | null;
 };
 
 type AgeGroup = {
@@ -113,7 +116,7 @@ export default function ParticipantsClient({ participants: initialParticipants, 
   };
 
   const exportCSV = () => {
-    const headers = ['Child Name', 'Age Group', 'Bib', 'Parent Name', 'Parent Phone', 'Parent Email'];
+    const headers = ['Participant Name', 'Age Group', 'Bib', 'Parent Name', 'Parent Phone', 'Parent Email', 'Lunch Count', 'Payment Status'];
     const rows = participants.map((p) => [
       p.name,
       p.ageGroup || '',
@@ -121,6 +124,8 @@ export default function ParticipantsClient({ participants: initialParticipants, 
       p.guardian,
       p.guardianPhone,
       p.guardianEmail || '',
+      p.lunchCount.toString(),
+      p.paymentProof ? 'Paid' : 'Not Paid',
     ]);
 
     const csvContent = [headers, ...rows]
@@ -161,10 +166,12 @@ export default function ParticipantsClient({ participants: initialParticipants, 
               <thead>
                 <tr className="text-left border-b text-zinc-500">
                   <th className="py-2 font-normal">Bib</th>
-                  <th className="py-2 font-normal">Child Name</th>
+                  <th className="py-2 font-normal">Participant Name</th>
                   <th className="py-2 font-normal">Age Group</th>
                   <th className="py-2 font-normal">Parent / Guardian</th>
                   <th className="py-2 font-normal">Phone</th>
+                  <th className="py-2 font-normal">Lunch</th>
+                  <th className="py-2 font-normal">Payment</th>
                   <th className="py-2 font-normal w-20">Actions</th>
                 </tr>
               </thead>
@@ -179,6 +186,31 @@ export default function ParticipantsClient({ participants: initialParticipants, 
                       <td className="py-2.5 text-zinc-600">{p.ageGroup}</td>
                       <td className="py-2.5">{p.guardian}</td>
                       <td className="py-2.5 text-zinc-600">{p.guardianPhone}</td>
+                      <td className="py-2.5">
+                        {p.lunchCount > 0 ? (
+                          <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded">
+                            {p.lunchCount} {p.lunchCount === 1 ? 'person' : 'people'}
+                          </span>
+                        ) : (
+                          <span className="text-zinc-400">—</span>
+                        )}
+                      </td>
+                      <td className="py-2.5">
+                        {p.paymentProof ? (
+                          <a
+                            href={p.paymentProof}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+                          >
+                            ✓ View proof
+                          </a>
+                        ) : (
+                          <span className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 rounded">
+                            No proof
+                          </span>
+                        )}
+                      </td>
                       <td className="py-2.5">
                         <Button
                           variant="destructive"
