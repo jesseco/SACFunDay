@@ -50,10 +50,9 @@ export default function ParentSignup() {
   // Update this list if the age groups are changed for the year.
   const youthAgeGroupNames = [
     "Kindergarten",
-    "Lower Primary (P.1-3)",
-    "Upper Primary (P.4-6)",
-    "Lower Secondary (S.1-3)",
-    "Upper Secondary (S.4-6)",
+    "G1-3",
+    "G4-6",
+    "S1-S6",
   ];
 
   // Load real data
