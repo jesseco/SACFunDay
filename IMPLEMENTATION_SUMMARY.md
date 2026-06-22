@@ -7,9 +7,9 @@
 - Stored in `guardians.lunchAttendees` column
 - Helps with catering planning
 
-### 2. ✅ $20 Sign-up/Lunch Fee
+### 2. ✅ $20 Sign-up/Lunch Fee (Per Family)
 - Fee clearly displayed in the signup form
-- Text: "A $20 sign-up / lunch fee applies"
+- Text: "A $20 sign-up / lunch fee applies per family"
 - Mentioned in both the header and payment section
 
 ### 3. ✅ Payment Proof Upload

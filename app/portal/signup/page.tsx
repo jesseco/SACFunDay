@@ -255,7 +255,7 @@ export default function ParentSignup() {
           You can sign up yourself (as an adult) and/or your children.
         </p>
         <p className="text-sm text-orange-600 mb-8">
-          Maximum 4 events per participant. A $20 sign-up / lunch fee applies.
+          Maximum 4 events per participant. A $20 sign-up / lunch fee applies per family.
         </p>
         <p className="text-xs text-zinc-500 mb-4">
           Note: Events and age groups may have been updated for this year — please select carefully.
@@ -321,7 +321,7 @@ export default function ParentSignup() {
 
             <div className="pt-2 border-t">
               <p className="text-sm font-medium mb-2">
-                A <strong>$20 sign-up / lunch fee</strong> applies (per person registered or attending lunch).
+                A <strong>$20 sign-up / lunch fee</strong> applies per family.
                 Please make payment and upload proof below.
               </p>
 
