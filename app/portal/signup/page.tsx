@@ -36,6 +36,7 @@ export default function ParentSignup() {
   const [guardianPhone, setGuardianPhone] = useState('');
   const [guardianEmail, setGuardianEmail] = useState('');
 
+  const [totalAttendees, setTotalAttendees] = useState(1); // Total people joining the event
   const [lunchCount, setLunchCount] = useState(0);
   const [paymentFile, setPaymentFile] = useState<File | null>(null);
 
@@ -255,7 +256,7 @@ export default function ParentSignup() {
           You can sign up yourself (as an adult) and/or your children.
         </p>
         <p className="text-sm text-orange-600 mb-8">
-          Maximum 4 events per participant. A $20 Enrollment Fee applies per participant.
+          Maximum 4 events per participant. A $20 Enrollment Fee applies per person joining the event (including spectators).
         </p>
         <p className="text-xs text-zinc-500 mb-4">
           Note: Events and age groups may have been updated for this year — please select carefully.
@@ -321,21 +322,38 @@ export default function ParentSignup() {
 
             <div className="pt-2 border-t">
               <p className="text-sm font-medium mb-3">
-                <strong>$20 Enrollment Fee per participant</strong> (regardless of event participation).
+                <strong>$20 Enrollment Fee per person</strong> (for everyone joining the event, including spectators).
               </p>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  How many people are joining the event? *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  required
+                  value={totalAttendees}
+                  onChange={(e) => setTotalAttendees(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-32 border rounded-lg px-4 h-11"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  Include family members, spectators, and participants.
+                </p>
+              </div>
 
               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-4">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-emerald-900">Number of participants:</span>
-                  <span className="font-semibold text-emerald-900">{participants.length}</span>
+                  <span className="text-emerald-900">Number joining the event:</span>
+                  <span className="font-semibold text-emerald-900">{totalAttendees}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm mt-1">
-                  <span className="text-emerald-900">Enrollment fee ($20 × {participants.length}):</span>
-                  <span className="font-semibold text-emerald-900">${participants.length * 20}</span>
+                  <span className="text-emerald-900">Enrollment fee ($20 × {totalAttendees}):</span>
+                  <span className="font-semibold text-emerald-900">${totalAttendees * 20}</span>
                 </div>
                 <div className="flex justify-between items-center text-base mt-2 pt-2 border-t border-emerald-300">
                   <span className="font-semibold text-emerald-900">Total Amount:</span>
-                  <span className="font-bold text-xl text-emerald-900">${participants.length * 20}</span>
+                  <span className="font-bold text-xl text-emerald-900">${totalAttendees * 20}</span>
                 </div>
               </div>
 
@@ -363,7 +381,10 @@ export default function ParentSignup() {
           {/* Participants */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-lg">Who are you signing up?</h2>
+              <div>
+                <h2 className="font-semibold text-lg">Who is competing in events?</h2>
+                <p className="text-xs text-zinc-500 mt-1">Only add people who will participate in events (not spectators)</p>
+              </div>
               <div className="flex gap-2">
                 <button
                   type="button"
