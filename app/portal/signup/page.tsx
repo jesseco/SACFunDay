@@ -36,8 +36,7 @@ export default function ParentSignup() {
   const [guardianPhone, setGuardianPhone] = useState('');
   const [guardianEmail, setGuardianEmail] = useState('');
 
-  const [totalAttendees, setTotalAttendees] = useState(1); // Total people joining the event
-  const [lunchCount, setLunchCount] = useState(0);
+  const [totalAttendees, setTotalAttendees] = useState(1); // Total people joining the event (also used for lunch count)
   const [paymentFile, setPaymentFile] = useState<File | null>(null);
 
   const [participants, setParticipants] = useState<Participant[]>([
@@ -138,7 +137,7 @@ export default function ParentSignup() {
     formData.set('guardianName', guardianName);
     formData.set('guardianPhone', guardianPhone);
     formData.set('guardianEmail', guardianEmail || '');
-    formData.set('lunchCount', lunchCount.toString());
+    formData.set('lunchCount', totalAttendees.toString()); // Use totalAttendees as lunch count
 
     if (paymentFile) {
       formData.set('paymentProof', paymentFile);
@@ -214,7 +213,7 @@ export default function ParentSignup() {
                 setGuardianName('');
                 setGuardianPhone('');
                 setGuardianEmail('');
-                setLunchCount(0);
+                setTotalAttendees(1);
                 setPaymentFile(null);
                 setParticipants([{ id: Date.now(), type: 'child', name: '', selectedEvents: [] }]);
               }}
@@ -256,7 +255,7 @@ export default function ParentSignup() {
           You can sign up yourself (as an adult) and/or your children.
         </p>
         <p className="text-sm text-orange-600 mb-8">
-          Maximum 4 events per participant. A $20 Enrollment Fee applies per person joining the event (including spectators).
+          Maximum 4 events per participant. $20 Enrollment Fee per person, lunch included.
         </p>
         <p className="text-xs text-zinc-500 mb-4">
           Note: Events and age groups may have been updated for this year — please select carefully.
@@ -304,30 +303,16 @@ export default function ParentSignup() {
 
           {/* Lunch, Fee & Payment */}
           <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
-            <h2 className="font-semibold text-lg mb-2">Lunch & Payment</h2>
+            <h2 className="font-semibold text-lg mb-2">Enrollment Fee & Payment</h2>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
-                How many people (including yourself and any children you are registering) will be joining lunch?
-              </label>
-              <input
-                type="number"
-                min={0}
-                value={lunchCount}
-                onChange={(e) => setLunchCount(Math.max(0, parseInt(e.target.value) || 0))}
-                className="w-32 border rounded-lg px-4 h-11"
-              />
-              <p className="text-xs text-zinc-500 mt-1">This helps us plan catering.</p>
-            </div>
-
-            <div className="pt-2 border-t">
               <p className="text-sm font-medium mb-3">
-                <strong>$20 Enrollment Fee per person</strong> (for everyone joining the event, including spectators).
+                <strong>$20 Enrollment Fee per person, lunch included</strong>
               </p>
 
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">
-                  How many people are joining the event? *
+                  How many people are joining SAC Fun Day Event? *
                 </label>
                 <input
                   type="number"
@@ -338,7 +323,7 @@ export default function ParentSignup() {
                   className="w-32 border rounded-lg px-4 h-11"
                 />
                 <p className="text-xs text-zinc-500 mt-1">
-                  Include family members, spectators, and participants.
+                  Include yourself, your children, and any family members.
                 </p>
               </div>
 
