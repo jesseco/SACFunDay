@@ -7,9 +7,10 @@
 - Stored in `guardians.lunchAttendees` column
 - Helps with catering planning
 
-### 2. ✅ $20 Sign-up/Lunch Fee (Per Family)
+### 2. ✅ $20 Enrollment Fee (Per Participant)
 - Fee clearly displayed in the signup form
-- Text: "A $20 sign-up / lunch fee applies per family"
+- Text: "A $20 Enrollment Fee applies per participant"
+- Dynamic total calculation shows: Number of participants × $20
 - Mentioned in both the header and payment section
 
 ### 3. ✅ Payment Proof Upload

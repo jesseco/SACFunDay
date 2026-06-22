@@ -255,7 +255,7 @@ export default function ParentSignup() {
           You can sign up yourself (as an adult) and/or your children.
         </p>
         <p className="text-sm text-orange-600 mb-8">
-          Maximum 4 events per participant. A $20 sign-up / lunch fee applies per family.
+          Maximum 4 events per participant. A $20 Enrollment Fee applies per participant.
         </p>
         <p className="text-xs text-zinc-500 mb-4">
           Note: Events and age groups may have been updated for this year — please select carefully.
@@ -320,8 +320,26 @@ export default function ParentSignup() {
             </div>
 
             <div className="pt-2 border-t">
+              <p className="text-sm font-medium mb-3">
+                <strong>$20 Enrollment Fee per participant</strong> (regardless of event participation).
+              </p>
+
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-4">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-emerald-900">Number of participants:</span>
+                  <span className="font-semibold text-emerald-900">{participants.length}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm mt-1">
+                  <span className="text-emerald-900">Enrollment fee ($20 × {participants.length}):</span>
+                  <span className="font-semibold text-emerald-900">${participants.length * 20}</span>
+                </div>
+                <div className="flex justify-between items-center text-base mt-2 pt-2 border-t border-emerald-300">
+                  <span className="font-semibold text-emerald-900">Total Amount:</span>
+                  <span className="font-bold text-xl text-emerald-900">${participants.length * 20}</span>
+                </div>
+              </div>
+
               <p className="text-sm font-medium mb-2">
-                A <strong>$20 sign-up / lunch fee</strong> applies per family.
                 Please make payment and upload proof below.
               </p>
 

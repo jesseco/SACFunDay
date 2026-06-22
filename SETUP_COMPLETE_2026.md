@@ -4,7 +4,7 @@
 
 ### 1. Payment & Lunch Features
 - ✅ Lunch attendee count tracking
-- ✅ $20 sign-up/lunch fee notice displayed (per family)
+- ✅ $20 Enrollment Fee notice displayed (per participant)
 - ✅ Payment proof upload (images/PDFs → Vercel Blob Storage)
 - ✅ Database schema updated with `lunch_attendees` and `payment_proof` columns
 - ✅ Migration script created: `scripts/migrate-payment-fields.ts`

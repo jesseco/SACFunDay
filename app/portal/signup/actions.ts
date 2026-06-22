@@ -89,7 +89,7 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
 
   // Require payment proof for new sign-ups (or if no previous proof on file)
   if (!paymentFile && (!guardian || !guardian.paymentProof)) {
-    throw new Error('Please upload proof of the $20 payment (per family).');
+    throw new Error('Please upload proof of payment for the $20 Enrollment Fee.');
   }
 
   let paymentProofUrl: string | null = null;

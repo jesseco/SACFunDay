@@ -56,7 +56,7 @@
 Parents can now:
 1. Fill in guardian information (name, phone, email)
 2. Specify lunch attendee count
-3. Upload payment proof ($20 fee per family)
+3. Upload payment proof ($20 Enrollment Fee per participant)
 4. Add participants (children/adults)
 5. Select events for each participant (max 4 per person)
 6. Receive QR codes for check-in
