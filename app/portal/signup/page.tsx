@@ -366,11 +366,49 @@ export default function ParentSignup() {
 
             {participants.map((participant, index) => {
               const isChild = participant.type === 'child';
-              
-              // Both children and adults now select an age/category and only see events for that group
-              const availableEvents = participant.ageGroupId
+
+              // Get the participant's age group
+              const participantAgeGroup = participant.ageGroupId
+                ? ageGroups.find(ag => ag.id === participant.ageGroupId)
+                : null;
+
+              // Get events for this participant's age group
+              let availableEvents = participant.ageGroupId
                 ? ageGroups.find(ag => ag.id === participant.ageGroupId)?.events || []
                 : [];
+
+              // Add family relay events based on eligibility
+              if (participantAgeGroup) {
+                // Kindergarten Family Relay: available to Kindergarten participants
+                const kindergartenRelayEvent = ageGroups
+                  .flatMap(ag => ag.events)
+                  .find((e: any) => e.name === 'Kindergarten Family Relay');
+
+                if (kindergartenRelayEvent && participantAgeGroup.name === 'Kindergarten') {
+                  // Only add if not already in their events
+                  if (!availableEvents.some((e: any) => e.id === kindergartenRelayEvent.id)) {
+                    availableEvents = [...availableEvents, kindergartenRelayEvent];
+                  }
+                }
+
+                // Primary & Secondary Family Relay: available to G1-3, G4-6, S1-S6, and ALL other age groups
+                const primaryRelayEvent = ageGroups
+                  .flatMap(ag => ag.events)
+                  .find((e: any) => e.name === 'Primary & Secondary Family Relay');
+
+                if (primaryRelayEvent &&
+                    (participantAgeGroup.name === 'G1-3' ||
+                     participantAgeGroup.name === 'G4-6' ||
+                     participantAgeGroup.name === 'S1-S6' ||
+                     participantAgeGroup.name === 'Women' ||
+                     participantAgeGroup.name === 'Men 49 or below' ||
+                     participantAgeGroup.name === 'Men 50+')) {
+                  // Only add if not already in their events
+                  if (!availableEvents.some((e: any) => e.id === primaryRelayEvent.id)) {
+                    availableEvents = [...availableEvents, primaryRelayEvent];
+                  }
+                }
+              }
 
               return (
                 <div key={participant.id} className="bg-white rounded-2xl p-6 shadow-sm mb-4">
@@ -426,7 +464,7 @@ export default function ParentSignup() {
                       </select>
                       {!isChild && (
                         <p className="text-xs text-zinc-500 mt-1">
-                          Adults: Select your age band — University+ (18-30), 30-45, 45-60, or 60+
+                          Adults: Select your category — Women, Men 49 or below, or Men 50+
                         </p>
                       )}
                     </div>
