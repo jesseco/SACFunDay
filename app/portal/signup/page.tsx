@@ -285,7 +285,7 @@ export default function ParentSignup() {
                   value={guardianPhone}
                   onChange={(e) => setGuardianPhone(e.target.value)}
                   className="w-full border rounded-lg px-4 h-11"
-                  placeholder="+65 9123 4567"
+                  placeholder="+852 9123 4567"
                 />
               </div>
               <div className="md:col-span-2">
