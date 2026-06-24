@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Users, Calendar, ClipboardList, Trophy, Settings, Home, UserCog } from "lucide-react";
+import { Users, Calendar, ClipboardList, Trophy, Settings, Home, UserCog, DollarSign, Target } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 import { requireUser } from "@/lib/auth";
 
@@ -41,6 +41,12 @@ export default async function AdminLayout({
               <Calendar className="h-4 w-4" /> Events
             </Link>
           )}
+          <Link href="/admin/enrollment" className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-zinc-100">
+            <DollarSign className="h-4 w-4" /> Enrollment & Lunch
+          </Link>
+          <Link href="/admin/event-participation" className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-zinc-100">
+            <Target className="h-4 w-4" /> Event Participation
+          </Link>
           <Link href="/admin/participants" className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-zinc-100">
             <Users className="h-4 w-4" /> Participants
           </Link>
