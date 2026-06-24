@@ -87,11 +87,7 @@ export async function submitSignup(formData: FormData): Promise<SignupResult> {
     .where(eq(guardians.phone, guardianPhone))
     .get();
 
-  // Require payment proof for new sign-ups (or if no previous proof on file)
-  if (!paymentFile && (!guardian || !guardian.paymentProof)) {
-    throw new Error('Please upload proof of payment for the $20 Enrollment Fee.');
-  }
-
+  // Payment proof is optional - upload if provided
   let paymentProofUrl: string | null = null;
   if (paymentFile && paymentFile instanceof File && paymentFile.size > 0) {
     // Upload to Vercel Blob Storage

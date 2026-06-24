@@ -343,22 +343,21 @@ export default function ParentSignup() {
               </div>
 
               <p className="text-sm font-medium mb-2">
-                Please make payment and upload proof below.
+                Please make payment and upload proof below (optional).
               </p>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Proof of Payment *</label>
+                <label className="block text-sm font-medium mb-1">Proof of Payment (Optional)</label>
                 <input
                   type="file"
                   accept="image/*,application/pdf"
                   onChange={(e) => setPaymentFile(e.target.files?.[0] || null)}
                   className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
-                  required
                 />
                 {paymentFile && (
                   <p className="text-xs text-emerald-600 mt-1">Selected: {paymentFile.name}</p>
                 )}
-                <p className="text-xs text-zinc-500 mt-1">Upload a screenshot or photo of your payment receipt.</p>
+                <p className="text-xs text-zinc-500 mt-1">Upload a screenshot or photo of your payment receipt. You can submit this later if needed.</p>
               </div>
             </div>
           </div>
