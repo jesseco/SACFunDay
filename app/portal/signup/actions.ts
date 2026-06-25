@@ -30,7 +30,7 @@ const signupSchema = z.object({
     .transform((v) => (v ? v : null)),
   participants: z
     .array(participantSchema)
-    .min(1, 'At least one participant is required')
+    .min(0) // Allow 0 participants for lunch-only signups
     .max(20, 'Too many participants in one submission'),
 });
 

@@ -39,9 +39,7 @@ export default function ParentSignup() {
   const [totalAttendees, setTotalAttendees] = useState(1); // Total people joining the event (also used for lunch count)
   const [paymentFile, setPaymentFile] = useState<File | null>(null);
 
-  const [participants, setParticipants] = useState<Participant[]>([
-    { id: 1, type: 'child', name: '', selectedEvents: [] },
-  ]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successData, setSuccessData] = useState<SignupSuccessParticipant[] | null>(null);
@@ -366,8 +364,10 @@ export default function ParentSignup() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="font-semibold text-lg">Who is competing in events?</h2>
-                <p className="text-xs text-zinc-500 mt-1">Only add people who will participate in events (not spectators)</p>
+                <h2 className="font-semibold text-lg">Who is competing in events? (Optional)</h2>
+                <p className="text-xs text-zinc-500 mt-1">
+                  Only add people who will participate in events. Leave blank if you're only joining for lunch.
+                </p>
               </div>
               <div className="flex gap-2">
                 <button
