@@ -57,7 +57,7 @@ export default function RetrieveQR() {
           Retrieve Your QR Code
         </h1>
         <p className="text-zinc-600 mb-8">
-          Forgot or lost your QR code? Enter a few details below to retrieve your <strong>Master QR code</strong>.
+          Need your QR code? Enter a few details below to retrieve your <strong>Master QR code</strong>.
         </p>
 
         {results.length === 0 ? (

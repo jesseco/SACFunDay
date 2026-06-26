@@ -167,7 +167,7 @@ export default function ParentSignup() {
               {successData.length > 0 ? (
                 <>
                   Below is the <strong>Master QR code for each participant</strong>.
-                  Save or screenshot them now — you'll need to show the right one at each event station.
+                  Save or screenshot them — you may be asked to show them at event stations.
                 </>
               ) : (
                 <>
@@ -206,7 +206,7 @@ export default function ParentSignup() {
                   </a>
 
                   <p className="text-xs text-zinc-500 mt-3">
-                    This is your single Master QR. Show this at every event station you are registered for.
+                    This Master QR may be used for check-in at event stations.
                   </p>
                 </div>
               ))}
@@ -216,8 +216,7 @@ export default function ParentSignup() {
           {successData.length === 0 && (
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center mb-8">
               <p className="text-blue-900">
-                You have enrolled for lunch only. No event QR codes are needed.
-                See you at SAC Fun Day!
+                You have enrolled for lunch only. See you at SAC Fun Day!
               </p>
             </div>
           )}
@@ -242,12 +241,12 @@ export default function ParentSignup() {
               href="/portal/retrieve"
               className="flex-1 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center hover:bg-emerald-700"
             >
-              Retrieve QR later
+              Retrieve QR code later
             </Link>
           </div>
 
           <p className="text-center text-xs text-zinc-500 mt-6">
-            You can always come back to the portal and use "Retrieve Your QR Code" if you lose these.
+            You can always retrieve your QR codes later from the portal if needed.
           </p>
         </div>
       </div>
@@ -571,8 +570,8 @@ export default function ParentSignup() {
 
           <p className="text-center text-xs text-zinc-500">
             {participants.length > 0
-              ? "You'll see your Master QR codes immediately after submitting."
-              : "Complete your enrollment. No QR codes needed for lunch-only signups."}
+              ? "Your Master QR codes will be generated after submitting."
+              : "Complete your enrollment — no event registration needed for lunch-only signups."}
           </p>
         </form>
       </div>
