@@ -3,6 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Papa from 'papaparse';
+import { useState } from 'react';
+import { deleteGuardian } from './actions';
 
 type Enrollment = {
   guardianId: number;
@@ -19,10 +21,26 @@ type Props = {
 };
 
 export default function EnrollmentClient({ enrollments }: Props) {
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
   const totalAttendees = enrollments.reduce((sum, e) => sum + e.lunchAttendees, 0);
   const totalRevenue = totalAttendees * 20;
   const paidCount = enrollments.filter(e => e.paymentProof).length;
   const unpaidCount = enrollments.filter(e => !e.paymentProof).length;
+
+  const handleDelete = async (guardianId: number, guardianName: string) => {
+    if (!confirm(`Delete enrollment for ${guardianName}? This will also delete all their participants and event registrations. This cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingId(guardianId);
+    const result = await deleteGuardian(guardianId);
+    setDeletingId(null);
+
+    if (!result.success) {
+      alert('Failed to delete enrollment. Please try again.');
+    }
+  };
 
   const exportCSV = () => {
     const headers = [
@@ -134,6 +152,7 @@ export default function EnrollmentClient({ enrollments }: Props) {
                   <th className="py-2 font-normal text-center">Competing</th>
                   <th className="py-2 font-normal text-right">Amount</th>
                   <th className="py-2 font-normal">Payment</th>
+                  <th className="py-2 font-normal text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -168,6 +187,15 @@ export default function EnrollmentClient({ enrollments }: Props) {
                           No proof
                         </span>
                       )}
+                    </td>
+                    <td className="py-2.5 text-center">
+                      <button
+                        onClick={() => handleDelete(e.guardianId, e.guardianName)}
+                        disabled={deletingId === e.guardianId}
+                        className="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded disabled:opacity-50"
+                      >
+                        {deletingId === e.guardianId ? 'Deleting...' : 'Delete'}
+                      </button>
                     </td>
                   </tr>
                 ))}
