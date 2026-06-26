@@ -327,17 +327,41 @@ export default function ParentSignup() {
               </p>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-2">
                   How many people are joining SAC Fun Day Event? *
                 </label>
-                <input
-                  type="number"
-                  min="1"
-                  required
-                  value={totalAttendees}
-                  onChange={(e) => setTotalAttendees(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-32 border rounded-lg px-4 h-11"
-                />
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setTotalAttendees(Math.max(1, totalAttendees - 1))}
+                    className="w-12 h-12 border rounded-lg flex items-center justify-center text-xl font-semibold hover:bg-zinc-50 active:bg-zinc-100"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    required
+                    value={totalAttendees}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '');
+                      if (val === '') {
+                        setTotalAttendees(1);
+                      } else {
+                        setTotalAttendees(Math.max(1, parseInt(val)));
+                      }
+                    }}
+                    className="w-20 border rounded-lg px-4 h-12 text-center text-xl font-semibold"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setTotalAttendees(totalAttendees + 1)}
+                    className="w-12 h-12 border rounded-lg flex items-center justify-center text-xl font-semibold hover:bg-zinc-50 active:bg-zinc-100"
+                  >
+                    +
+                  </button>
+                </div>
                 <p className="text-xs text-zinc-500 mt-1">
                   Include yourself, your children, and any family members.
                 </p>
