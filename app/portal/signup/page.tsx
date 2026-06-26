@@ -161,47 +161,66 @@ export default function ParentSignup() {
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">🎉</div>
             <h1 className="text-3xl font-semibold tracking-tight mb-2">
-              You're all signed up!
+              You're all enrolled!
             </h1>
             <p className="text-zinc-600">
-              Here are your <strong>Master QR codes</strong>. Save or screenshot them now — 
-              you'll need to show the right one at each station.
+              {successData.length > 0 ? (
+                <>
+                  Below is the <strong>Master QR code for each participant</strong>.
+                  Save or screenshot them now — you'll need to show the right one at each event station.
+                </>
+              ) : (
+                <>
+                  Your enrollment is complete. You're all set for the event and lunch!
+                </>
+              )}
             </p>
           </div>
 
-          <div className="space-y-6 mb-8">
-            {successData.map((person, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-sm p-6 text-center">
-                <p className="font-semibold text-xl mb-1">{person.name}</p>
-                
-                {person.events.length > 0 && (
-                  <p className="text-sm text-zinc-600 mb-4">
-                    Registered for: {person.events.join(' • ')}
+          {successData.length > 0 && (
+            <div className="space-y-6 mb-8">
+              {successData.map((person, index) => (
+                <div key={index} className="bg-white rounded-2xl shadow-sm p-6 text-center">
+                  <p className="font-semibold text-xl mb-1">{person.name}</p>
+
+                  {person.events.length > 0 && (
+                    <p className="text-sm text-zinc-600 mb-4">
+                      Registered for: {person.events.join(' • ')}
+                    </p>
+                  )}
+
+                  <div className="flex justify-center mb-4">
+                    <img
+                      src={person.qrDataUrl}
+                      alt={`Master QR code for ${person.name}`}
+                      className="w-56 h-56 border border-zinc-200 rounded-xl p-2 bg-white"
+                    />
+                  </div>
+
+                  <a
+                    href={person.qrDataUrl}
+                    download={`QR_${person.name.replace(/\s+/g, '_')}.png`}
+                    className="inline-block text-sm text-emerald-700 hover:underline font-medium"
+                  >
+                    Download this QR code
+                  </a>
+
+                  <p className="text-xs text-zinc-500 mt-3">
+                    This is your single Master QR. Show this at every event station you are registered for.
                   </p>
-                )}
-
-                <div className="flex justify-center mb-4">
-                  <img 
-                    src={person.qrDataUrl} 
-                    alt={`Master QR code for ${person.name}`}
-                    className="w-56 h-56 border border-zinc-200 rounded-xl p-2 bg-white"
-                  />
                 </div>
+              ))}
+            </div>
+          )}
 
-                <a
-                  href={person.qrDataUrl}
-                  download={`QR_${person.name.replace(/\s+/g, '_')}.png`}
-                  className="inline-block text-sm text-emerald-700 hover:underline font-medium"
-                >
-                  Download this QR code
-                </a>
-
-                <p className="text-xs text-zinc-500 mt-3">
-                  This is your single Master QR. Show this at every station you are registered for.
-                </p>
-              </div>
-            ))}
-          </div>
+          {successData.length === 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center mb-8">
+              <p className="text-blue-900">
+                You have enrolled for lunch only. No event QR codes are needed.
+                See you at SAC Fun Day!
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
@@ -551,7 +570,9 @@ export default function ParentSignup() {
           </button>
 
           <p className="text-center text-xs text-zinc-500">
-            You'll see your Master QR codes immediately after submitting.
+            {participants.length > 0
+              ? "You'll see your Master QR codes immediately after submitting."
+              : "Complete your enrollment. No QR codes needed for lunch-only signups."}
           </p>
         </form>
       </div>
