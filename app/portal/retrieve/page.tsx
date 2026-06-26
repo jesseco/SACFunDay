@@ -89,13 +89,18 @@ export default function RetrieveQR() {
             <div>
               <label className="block text-sm font-medium mb-1">Year of birth (optional but helpful)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={birthYear}
-                onChange={(e) => setBirthYear(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, '');
+                  if (val.length <= 4) {
+                    setBirthYear(val);
+                  }
+                }}
                 placeholder="2015"
                 className="w-full border rounded-lg px-4 h-11"
-                min="1900"
-                max="2026"
               />
             </div>
 
